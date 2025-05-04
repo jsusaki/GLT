@@ -1025,6 +1025,9 @@
     <ClInclude Include="include\Graphics\PostProcessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lib\FastNoiseLite\FastNoiseLite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic\basic.vs" />
@@ -1451,7 +1454,8 @@
     <None Include="res\shaders\post_processing\simple_crt.fs" />
     <None Include="res\shaders\post_processing\another_crt.fs" />
     <None Include="res\shaders\post_processing\grayscale.fs" />
-    <None Include="res\shaders\post_processing\ayre.fs" />
+    <None Include="res\shaders\basic\ayre.fs" />
+    <None Include="res\shaders\basic\solid.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />

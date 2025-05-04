@@ -212,6 +212,7 @@
     <ClInclude Include="include\Graphics\Texture.h" />
     <ClInclude Include="include\Core\Window.h" />
     <ClInclude Include="include\GUI\GUI.h" />
+    <ClInclude Include="lib\FastNoiseLite\FastNoiseLite.h" />
     <ClInclude Include="lib\glad\include\glad\glad.h" />
     <ClInclude Include="lib\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="lib\glfw\include\glfw3.h" />
@@ -659,8 +660,9 @@
     <None Include="lib\glm\gtx\wrap.inl" />
     <None Include="res\shaders\basic\basic.fs" />
     <None Include="res\shaders\basic\basic.vs" />
+    <None Include="res\shaders\basic\solid.fs" />
     <None Include="res\shaders\post_processing\another_crt.fs" />
-    <None Include="res\shaders\post_processing\ayre.fs" />
+    <None Include="res\shaders\basic\ayre.fs" />
     <None Include="res\shaders\post_processing\simple_crt.fs" />
     <None Include="res\shaders\post_processing\grayscale.fs" />
     <None Include="res\shaders\post_processing\no_effect.fs" />

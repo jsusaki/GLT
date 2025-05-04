@@ -13,20 +13,11 @@ public:
 public:
 	void Create() override
 	{
-		// Load and Initialize Resources
-		tex = new Texture("res/images/wizardRL.png");
 		quad = new Quad();
 		basic = new Shader(
 			"res/shaders/basic/basic.vs",
-			"res/shaders/basic/basic.fs"
+			"res/shaders/basic/ayre.fs"
 		);
-
-		shader = new Shader(
-			"res/shaders/post_processing/post_processing.vs",
-			"res/shaders/post_processing/grayscale.fs"
-		);
-
-		post_processor = new PostProcessor(m_window.Width(), m_window.Height());
 	}
 
 	void ProcessInput() override
@@ -37,38 +28,30 @@ public:
 
 	void Simulate(f32 dt) override
 	{
-		// Update logic
+		acc_time += dt;
 	}
 
 	void Render() override
 	{
-		post_processor->Begin();
-
 		basic->Use();
-		basic->SetUniform("screen_texture", 0);
-		tex->Bind();
+		basic->SetUniform("acc_time", acc_time);
+		basic->SetUniform("resolution", { 1280, 960 });
 		quad->Draw();
 
-		shader->Use();
-		shader->SetUniform("screen_texture", 0);
-
+		// GUI Code
 		m_gui.m_func = [&]() {
-			// GUI Code
-		};
 
-		post_processor->End();
-		post_processor->Render();
+		};
 	}
 
 private:
 	Quad* quad = nullptr;
-	Texture* tex = nullptr;
 	Shader* shader = nullptr;
 	Shader* basic = nullptr;
-	PostProcessor* post_processor = nullptr;
+
+	f32 acc_time;
 };
 
-/*
 int main()
 {
 	Experiment exp;
@@ -76,4 +59,3 @@ int main()
 		exp.Start();
 	return 0;
 }
-*/
