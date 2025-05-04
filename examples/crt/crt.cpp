@@ -120,7 +120,7 @@ private:
 	} config;
 };
 
-
+/*
 int main()
 {
 	Experiment exp;
@@ -128,3 +128,4 @@ int main()
 		exp.Start();
 	return 0;
 }
+*/

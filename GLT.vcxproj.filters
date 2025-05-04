@@ -72,7 +72,7 @@
     <ClCompile Include="include\Graphics\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\crt\crt.cpp">
+    <ClCompile Include="examples\CRT\CRT.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

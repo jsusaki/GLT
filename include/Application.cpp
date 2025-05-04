@@ -67,6 +67,7 @@ bool Application::Start()
         // GUI
         m_gui.Render();
 
+        // Swap frame buffer
         m_window.SwapBuffers();
 
         // Update Frame Time
@@ -78,8 +79,8 @@ bool Application::Start()
 
 bool Application::ShutDown()
 {
-    m_window.Close();
     m_gui.Shutdown();
+    m_window.Close();
     return true;
 }
 

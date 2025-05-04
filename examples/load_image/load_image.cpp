@@ -12,28 +12,37 @@ public:
 public:
 	void Create() override
 	{
+		// Load and Initialize Resources
 		tex    = new Texture("res/images/wizardRL.png");
 		quad   = new Quad();
-		//shader = new Shader("res/shaders/basic/basic.vs", "res/shaders/basic/basic.fs");
-		shader = new Shader("res/shaders/post_processing/post_processing.vs", "res/shaders/post_processing/post_processing.fs");
+		shader = new Shader(
+			"res/shaders/post_processing/post_processing.vs", 
+			"res/shaders/post_processing/grayscale.fs"
+		);
 	}
 
 	void ProcessInput() override
 	{
-
+		if (m_input.IsKeyPressed(GLFW_KEY_ESCAPE))
+			ShutDown();
 	}
 
 	void Simulate(f32 dt) override
 	{
-
+		// Update simulation logic
 	}
 
 	void Render() override
 	{
 		shader->Use();
 		shader->SetUniform("screen_texture", 0);
+
 		tex->Bind();
 		quad->Draw();
+
+		m_gui.m_func = [&]() {
+			// GUI Code
+		};
 	}
 
 private:
@@ -42,12 +51,10 @@ private:
 	Shader* shader = nullptr;
 };
 
-/*
-	int main()
-	{
-		Experiment exp;
-		if (exp.Init("Experiment", 1280, 960))
-			exp.Start();
-		return 0;
-	}
-*/
+int main()
+{
+	Experiment exp;
+	if (exp.Init("Experiment", 1280, 960))
+		exp.Start();
+	return 0;
+}

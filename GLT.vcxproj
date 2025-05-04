@@ -178,7 +178,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\crt\crt.cpp" />
+    <ClCompile Include="examples\CRT\CRT.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
     <ClCompile Include="include\Graphics\Texture.cpp" />
     <ClCompile Include="lib\glad\src\glad.c" />
