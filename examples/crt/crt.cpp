@@ -57,62 +57,59 @@ public:
 		shader->SetUniform("screen_texture", 0);
 
 		// Shader Uniforms
-		shader->SetUniform("screen_resolution", { m_window.Width(), m_window.Height() });
-		shader->SetUniform("scanline_amplitude", config.scanline_amplitude);
-		shader->SetUniform("scanline_frequency", config.scanline_frequency);
-		shader->SetUniform("scanline_offset", config.scanline_offset);
-		shader->SetUniform("primary_curvature", config.primary_curvature);
-		shader->SetUniform("secondary_curvature", config.secondary_curvature);
-		shader->SetUniform("vignette_radius", config.vignette_radius);
-		shader->SetUniform("vignette_softness", config.vignette_softness);
-		shader->SetUniform("blur_radius", config.blur_radius);
-		shader->SetUniform("blend_factor", config.blend_factor);
-		shader->SetUniform("gamma", config.gamma);
-		shader->SetUniform("contrast", config.contrast);
-		shader->SetUniform("saturation", config.saturation);
-		shader->SetUniform("brightness", config.brightness);
-		shader->SetUniform("color_correction", config.color_correction);
-		shader->SetUniform("phosphor_dot_scale", config.phosphor_dot_scale);
+		shader->SetUniform("screen_resolution",     { m_window.Width(), m_window.Height() });
+		shader->SetUniform("scanline_amplitude",    config.scanline_amplitude);
+		shader->SetUniform("scanline_frequency",    config.scanline_frequency);
+		shader->SetUniform("scanline_offset",       config.scanline_offset);
+		shader->SetUniform("primary_curvature",     config.primary_curvature);
+		shader->SetUniform("secondary_curvature",   config.secondary_curvature);
+		shader->SetUniform("vignette_radius",       config.vignette_radius);
+		shader->SetUniform("vignette_softness",     config.vignette_softness);
+		shader->SetUniform("blur_radius",           config.blur_radius);
+		shader->SetUniform("blend_factor",          config.blend_factor);
+		shader->SetUniform("gamma",                 config.gamma);
+		shader->SetUniform("contrast",              config.contrast);
+		shader->SetUniform("saturation",            config.saturation);
+		shader->SetUniform("brightness",            config.brightness);
+		shader->SetUniform("color_correction",      config.color_correction);
+		shader->SetUniform("phosphor_dot_scale",    config.phosphor_dot_scale);
 		shader->SetUniform("phosphor_dot_softness", config.phosphor_dot_softness);
-		shader->SetUniform("bloom_intensity", config.bloom_intensity);
-		shader->SetUniform("bloom_threshold", config.bloom_threshold);
-		shader->SetUniform("bloom_blend_factor", config.bloom_blend_factor);
+		shader->SetUniform("bloom_intensity",       config.bloom_intensity);
+		shader->SetUniform("bloom_threshold",       config.bloom_threshold);
+		shader->SetUniform("bloom_blend_factor",    config.bloom_blend_factor);
 
 		// Draw Texture
 		tex->Bind();
 		quad->Draw();
 
-
-		/*
-		void DisplaySimpleCRT(SimpleCRTConfig& config)
-		{
+		// Draw Interface
+		m_gui.m_func = [&]() {
 			ImGui::Begin("Simple CRT");
 			ImGui::SeparatorText("CRT Effect Controls");
-			ImGui::SliderFloat("scanline amplitude", &config.scanline_amplitude, 0.0, 1.0);
-			ImGui::SliderFloat("scanline frequency", &config.scanline_frequency, 0.0, 3000.0);
-			ImGui::SliderFloat("scanline offset", &config.scanline_offset, 0.0, 10.0);
-			ImGui::SliderFloat("primary curvature", &config.primary_curvature, -2.0, 2.0);
-			ImGui::SliderFloat("secondary curvature", &config.secondary_curvature, -2.0, 2.0);
+			ImGui::SliderFloat("scanline_amplitude",     &config.scanline_amplitude, 0.0, 1.0);
+			ImGui::SliderFloat("scanline_frequency",     &config.scanline_frequency, 0.0, 3000.0);
+			ImGui::SliderFloat("scanline_offset",        &config.scanline_offset, 0.0, 10.0);
+			ImGui::SliderFloat("primary_curvature",      &config.primary_curvature, -2.0, 2.0);
+			ImGui::SliderFloat("secondary_curvature",    &config.secondary_curvature, -2.0, 2.0);
 			ImGui::SliderFloat("vignette_radius offset", &config.vignette_radius, 0.0, 1.0);
-			ImGui::SliderFloat("vignette softness", &config.vignette_softness, 0.0, 1.0);
-			ImGui::SliderFloat("blur radius", &config.blur_radius, 0.0, 1.0);
-			ImGui::SliderFloat("blend factor", &config.blend_factor, 0.0, 1.0);
-			ImGui::SliderFloat("gamma", &config.gamma, 0.1, 3.0);
-			ImGui::SliderFloat("contrast", &config.contrast, 0.5, 2.0);
-			ImGui::SliderFloat("saturation", &config.saturation, 0.0, 2.0);
-			ImGui::SliderFloat("brightness", &config.brightness, 0.0, 2.0);
-			ImGui::SliderFloat("color correction", &config.color_correction, 0.0, 2.0);
+			ImGui::SliderFloat("vignette_softness",      &config.vignette_softness, 0.0, 1.0);
+			ImGui::SliderFloat("blur_radius",            &config.blur_radius, 0.0, 1.0);
+			ImGui::SliderFloat("blend_factor",           &config.blend_factor, 0.0, 1.0);
+			ImGui::SliderFloat("gamma",                  &config.gamma, 0.1, 3.0);
+			ImGui::SliderFloat("contrast",               &config.contrast, 0.5, 2.0);
+			ImGui::SliderFloat("saturation",             &config.saturation, 0.0, 2.0);
+			ImGui::SliderFloat("brightness",             &config.brightness, 0.0, 2.0);
+			ImGui::SliderFloat("color_correction",       &config.color_correction, 0.0, 2.0);
 
-			ImGui::SliderFloat("phosphor_dot_scale", &config.phosphor_dot_scale, 0.0, 1280.0);
-			ImGui::SliderFloat("phosphor_dot_softness", &config.phosphor_dot_softness, 0.0, 1.0);
+			ImGui::SliderFloat("phosphor_dot_scale",     &config.phosphor_dot_scale, 0.0, 1280.0);
+			ImGui::SliderFloat("phosphor_dot_softness",  &config.phosphor_dot_softness, 0.0, 1.0);
 
-			ImGui::SliderFloat("bloom_intensity ", &config.bloom_intensity, 0.0, 1.0);
-			ImGui::SliderFloat("bloom_threshold ", &config.bloom_threshold, 0.0, 1.0);
-			ImGui::SliderFloat("bloom_blend_factor ", &config.bloom_blend_factor, 0.0, 1.0);
+			ImGui::SliderFloat("bloom_intensity ",       &config.bloom_intensity, 0.0, 1.0);
+			ImGui::SliderFloat("bloom_threshold ",       &config.bloom_threshold, 0.0, 1.0);
+			ImGui::SliderFloat("bloom_blend_factor ",    &config.bloom_blend_factor, 0.0, 1.0);
 
 			ImGui::End();
-		}
-		*/
+		};
 	}
 
 private:

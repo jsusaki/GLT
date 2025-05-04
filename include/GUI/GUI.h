@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "Core/Common.h"
 
 #include "imgui.h"
@@ -44,6 +46,7 @@ public:
         {
             // User Interface
             General();
+            m_func();
         }
 
         ImGui::Render();
@@ -59,7 +62,11 @@ public:
 
     bool IsWindowFocused() const { return ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow); }
 
+public:
+    std::function<void()> m_func;
+
 private:
     ImGuiIO io;
     bool show_imgui_demo = false;
+
 };
