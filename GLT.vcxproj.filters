@@ -63,7 +63,7 @@
     <ClCompile Include="include\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Window.cpp">
+    <ClCompile Include="include\Core\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\Graphics\Texture.cpp">
@@ -947,7 +947,7 @@
     <ClInclude Include="lib\stb\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Common.h">
+    <ClInclude Include="include\Core\Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\imgui\backends\imgui_impl_glfw.h">
@@ -989,13 +989,13 @@
     <ClInclude Include="include\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Random.h">
+    <ClInclude Include="include\Core\Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Window.h">
+    <ClInclude Include="include\Core\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Input.h">
+    <ClInclude Include="include\Core\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Graphics\Color.h">

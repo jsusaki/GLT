@@ -196,17 +196,17 @@
     <ClCompile Include="lib\stb\stb_image.cpp" />
     <ClCompile Include="include\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="include\Window.cpp" />
+    <ClCompile Include="include\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Graphics\Color.h" />
-    <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Graphics\Quad.h" />
-    <ClInclude Include="include\Random.h" />
+    <ClInclude Include="include\Core\Random.h" />
     <ClInclude Include="include\Graphics\Shader.h" />
     <ClInclude Include="include\Graphics\Texture.h" />
-    <ClInclude Include="include\Window.h" />
+    <ClInclude Include="include\Core\Window.h" />
     <ClInclude Include="lib\glad\include\glad\glad.h" />
     <ClInclude Include="lib\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="lib\glfw\include\glfw3.h" />
@@ -510,7 +510,7 @@
     <ClInclude Include="lib\imgui\imstb_truetype.h" />
     <ClInclude Include="lib\imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="lib\stb\stb_image.h" />
-    <ClInclude Include="include\Common.h" />
+    <ClInclude Include="include\Core\Common.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\glm\detail\func_common.inl" />

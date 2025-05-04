@@ -5,7 +5,7 @@
 #include <stb/stb_image.h>
 #include <glad/glad.h>
 
-#include "Common.h"
+#include "Core/Common.h"
 
 class Texture
 {

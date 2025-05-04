@@ -7,10 +7,10 @@
 #include <chrono>
 #include <algorithm>
 
-#include "Common.h"
-#include "Random.h"
-#include "Window.h"
-#include "Input.h"
+#include "Core/Common.h"
+#include "Core/Random.h"
+#include "Core/Window.h"
+#include "Core/Input.h"
 
 class Application
 {
