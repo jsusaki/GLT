@@ -18,8 +18,6 @@ public:
     void Init(const std::string& title = "GL Template", s32 width = 800, s32 height = 600);
     void SetInput(Input* input);
 
-    void SetTitle(const std::string& title);
-
     void PollEvents();
     bool ShouldClose();
     void SetShouldClose();
@@ -29,6 +27,11 @@ public:
 
     GLFWwindow* GetWindow();
     Input* GetInput();
+
+public:
+    void SetTitle(const std::string& title);
+    inline s32 Width()  { return m_width; }
+    inline s32 Height() { return m_height; }
 
 private:
     GLFWwindow* m_window;

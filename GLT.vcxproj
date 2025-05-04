@@ -178,6 +178,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="examples\crt\crt.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
     <ClCompile Include="include\Graphics\Texture.cpp" />
     <ClCompile Include="lib\glad\src\glad.c" />
@@ -195,7 +196,7 @@
     <ClCompile Include="lib\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="lib\stb\stb_image.cpp" />
     <ClCompile Include="include\Application.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="examples\load_image\load_image.cpp" />
     <ClCompile Include="include\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +208,7 @@
     <ClInclude Include="include\Graphics\Shader.h" />
     <ClInclude Include="include\Graphics\Texture.h" />
     <ClInclude Include="include\Core\Window.h" />
+    <ClInclude Include="include\GUI\GUI.h" />
     <ClInclude Include="lib\glad\include\glad\glad.h" />
     <ClInclude Include="lib\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="lib\glfw\include\glfw3.h" />
@@ -655,8 +657,6 @@
     <None Include="res\shaders\basic\basic.fs" />
     <None Include="res\shaders\basic\basic.vs" />
     <None Include="res\shaders\post_processing\another_crt.fs" />
-    <None Include="res\shaders\post_processing\blur_busters.fs" />
-    <None Include="res\shaders\post_processing\crt-geom.fs" />
     <None Include="res\shaders\post_processing\simple_crt.fs" />
     <None Include="res\shaders\post_processing\grayscale.fs" />
     <None Include="res\shaders\post_processing\no_effect.fs" />

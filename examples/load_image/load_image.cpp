@@ -14,7 +14,8 @@ public:
 	{
 		tex    = new Texture("res/images/wizardRL.png");
 		quad   = new Quad();
-		shader = new Shader("res/shaders/basic/basic.vs", "res/shaders/basic/basic.fs");
+		//shader = new Shader("res/shaders/basic/basic.vs", "res/shaders/basic/basic.fs");
+		shader = new Shader("res/shaders/post_processing/post_processing.vs", "res/shaders/post_processing/post_processing.fs");
 	}
 
 	void ProcessInput() override
@@ -41,11 +42,12 @@ private:
 	Shader* shader = nullptr;
 };
 
-
-int main()
-{
-	Experiment exp;
-	if (exp.Init("Experiment", 1280, 960))
-		exp.Start();
-	return 0;
-}
+/*
+	int main()
+	{
+		Experiment exp;
+		if (exp.Init("Experiment", 1280, 960))
+			exp.Start();
+		return 0;
+	}
+*/

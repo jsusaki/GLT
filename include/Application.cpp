@@ -11,6 +11,9 @@ bool Application::Init(const std::string& title, s32 width, s32 height)
     m_window.Init(title, width, height);
     m_window.SetInput(&m_input);
 
+    // GUI
+    m_gui.Init(m_window.GetWindow());
+
     // Time
     m_t1 = std::chrono::system_clock::now();
     m_t2 = std::chrono::system_clock::now();
@@ -61,6 +64,9 @@ bool Application::Start()
         // Rendering pipeline
         Render();
 
+        // GUI
+        m_gui.Render();
+
         m_window.SwapBuffers();
 
         // Update Frame Time
@@ -73,6 +79,7 @@ bool Application::Start()
 bool Application::ShutDown()
 {
     m_window.Close();
+    m_gui.Shutdown();
     return true;
 }
 
@@ -96,6 +103,7 @@ void Application::Simulate(f32 dt) {}
 void Application::Render()
 {
     m_window.Clear({ 0,0,0,0 });
+
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

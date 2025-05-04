@@ -57,7 +57,7 @@
     <ClCompile Include="lib\imgui\implot_items.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="examples\load_image\load_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\Application.cpp">
@@ -70,6 +70,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\Graphics\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="examples\crt\crt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1010,6 +1013,9 @@
     <ClInclude Include="include\Graphics\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\GUI\GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic\basic.vs" />
@@ -1436,8 +1442,6 @@
     <None Include="res\shaders\post_processing\simple_crt.fs" />
     <None Include="res\shaders\post_processing\another_crt.fs" />
     <None Include="res\shaders\post_processing\grayscale.fs" />
-    <None Include="res\shaders\post_processing\blur_busters.fs" />
-    <None Include="res\shaders\post_processing\crt-geom.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />
