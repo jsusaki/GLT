@@ -7,7 +7,7 @@
 
 #include "Common.h"
 #include "Input.h"
-#include "Color.h"
+#include "Graphics/Color.h"
 
 class Window
 {
@@ -25,7 +25,7 @@ public:
     void SetShouldClose();
     void Close();
     void SwapBuffers();
-    void Clear(const ucolor uc);
+    void Clear(const Color c);
 
     GLFWwindow* GetWindow();
     Input* GetInput();

@@ -35,7 +35,7 @@ protected:
 private:
     void UpdateFrameTime();
 
-private: // Simulator variables
+private:
     // Timing
     std::chrono::time_point<std::chrono::system_clock> m_t1;
     std::chrono::time_point<std::chrono::system_clock> m_t2;
@@ -46,5 +46,4 @@ private: // Simulator variables
     f32 m_delta_time;
     f32 m_elapsed_time;
     f32 m_last_elapsed_time;
-
 };

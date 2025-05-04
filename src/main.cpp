@@ -1,22 +1,25 @@
 #include "Application.h"
 
+#include "Graphics/Texture.h"
+#include "Graphics/Quad.h"
+#include "Graphics/Shader.h"
+
 class Experiment : public Application
 {
 public:
-	Experiment()
-	{
+	Experiment() {}
 
-	}
-
+public:
 	void Create() override
 	{
-
+		tex    = new Texture("res/images/wizardRL.png");
+		quad   = new Quad();
+		shader = new Shader("res/shaders/basic/basic.vs", "res/shaders/basic/basic.fs");
 	}
 
 	void ProcessInput() override
 	{
-		if (m_input.IsKeyPressed(GLFW_KEY_SPACE))
-			std::cout << "SPACE PRESSED!\n";
+
 	}
 
 	void Simulate(f32 dt) override
@@ -26,11 +29,16 @@ public:
 
 	void Render() override
 	{
-
+		shader->Use();
+		shader->SetUniform("screen_texture", 0);
+		tex->Bind();
+		quad->Draw();
 	}
 
 private:
-
+	Quad* quad     = nullptr;
+	Texture* tex   = nullptr;
+	Shader* shader = nullptr;
 };
 
 

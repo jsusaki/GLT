@@ -178,6 +178,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\Graphics\Shader.cpp" />
+    <ClCompile Include="include\Graphics\Texture.cpp" />
     <ClCompile Include="lib\glad\src\glad.c" />
     <ClCompile Include="lib\glm\detail\glm.cpp" />
     <ClCompile Include="lib\imgui\backends\imgui_impl_glfw.cpp" />
@@ -198,9 +200,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Application.h" />
-    <ClInclude Include="include\Color.h" />
+    <ClInclude Include="include\Graphics\Color.h" />
     <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\Graphics\Quad.h" />
     <ClInclude Include="include\Random.h" />
+    <ClInclude Include="include\Graphics\Shader.h" />
+    <ClInclude Include="include\Graphics\Texture.h" />
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="lib\glad\include\glad\glad.h" />
     <ClInclude Include="lib\glad\include\KHR\khrplatform.h" />

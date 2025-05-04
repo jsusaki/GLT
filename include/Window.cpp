@@ -65,10 +65,10 @@ bool Window::ShouldClose() { return glfwWindowShouldClose(m_window); }
 void Window::SetShouldClose() { glfwSetWindowShouldClose(m_window, true); }
 void Window::Close() { glfwDestroyWindow(m_window);  glfwTerminate(); }
 void Window::SwapBuffers() { glfwSwapBuffers(m_window); }
-void Window::Clear(const ucolor uc)
+void Window::Clear(const Color c)
 {
-    fcolor fc = to_float(uc);
-    glClearColor(fc.r, fc.g, fc.b, fc.a);
+    glm::vec4 v = to_float(c);
+    glClearColor(v.r, v.g, v.b, v.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
