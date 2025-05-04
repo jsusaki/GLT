@@ -1,5 +1,7 @@
-# GL Template
+# GLT (Graphic Library Template)
 
+A template experiment framework for my projects.
+Essentially, an input and GPU rendering wrapper with some graphic utilities.
 
 ```cpp
 
