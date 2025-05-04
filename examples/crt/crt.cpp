@@ -15,30 +15,6 @@ public:
 		tex       = new Texture("res/images/wizardRL.png");
 		quad      = new Quad();
 		shader    = new Shader("res/shaders/post_processing/post_processing.vs", "res/shaders/post_processing/simple_crt.fs");
-
-		 config = {
-			.scanline_amplitude = 0.3f, //0.19f
-			.scanline_frequency = 1920.0f,
-			.scanline_offset = 1.20f,
-			.primary_curvature = 0.0125f,   //0.01f
-			.secondary_curvature = 0.0f,
-			.vignette_radius = 0.8f,
-			.vignette_softness = 0.25f,
-			.blur_radius = 0.003f,
-			.blend_factor = 0.2f,
-			.gamma = 0.8f,
-			.contrast = 1.1f,      // 1.0f
-			.saturation = 1.15f,   // 1.0f
-			.brightness = 1.10f,   // 1.0f
-			.color_correction = 1.0f,
-
-			.phosphor_dot_scale = 640.0f,
-			.phosphor_dot_softness = 0.15f,
-
-			.bloom_intensity = 0.5f,
-			.bloom_threshold = 0.15f,
-			.bloom_blend_factor = 0.5f,
-		};
 	}
 
 	void ProcessInput() override
@@ -119,27 +95,28 @@ private:
 
 	struct SimpleCRTConfig
 	{
-		float scanline_amplitude;
-		float scanline_frequency;
-		float scanline_offset;
-		float primary_curvature;
-		float secondary_curvature;
-		float vignette_radius;
-		float vignette_softness;
-		float blur_radius;
-		float blend_factor;
-		float gamma;
-		float contrast;
-		float saturation;
-		float brightness;
-		float color_correction;
+		float scanline_amplitude = 0.3f;
+		float scanline_frequency = 1920.0f;
+		float scanline_offset = 1.20f;
+		float primary_curvature = 0.0125f;
+		float secondary_curvature = 0.0f;
+		float vignette_radius = 0.8f;
+		float vignette_softness = 0.25f;
+		float blur_radius = 0.003f;
 
-		float phosphor_dot_scale;
-		float phosphor_dot_softness;
+		float blend_factor = 0.2f;
+		float gamma = 0.8f;
+		float contrast = 1.1f;
+		float saturation = 1.15f;
+		float brightness = 1.10f;
+		float color_correction = 1.0f;
 
-		float bloom_intensity;
-		float bloom_threshold;
-		float bloom_blend_factor;
+		float phosphor_dot_scale    = 640.0f;
+		float phosphor_dot_softness = 0.15f;
+
+		float bloom_intensity = 0.5f;
+		float bloom_threshold = 0.15f;
+		float bloom_blend_factor = 0.5f;
 	} config;
 };
 
