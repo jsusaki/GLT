@@ -14,6 +14,7 @@ public:
 	Texture(const std::string& filepath, bool flip_vertically = true, bool filtered = true, bool clamped = false);
 	~Texture();
 
+public:
 	void Bind(unsigned int slot = 0) const;
 	void Unbind() const;
 
