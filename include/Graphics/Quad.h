@@ -2,7 +2,6 @@
 
 #include <glad/glad.h>
 #include <vector>
-#include "Color.h"
 
 struct vertex
 {
@@ -74,8 +73,8 @@ struct Quad
     }
 
     std::vector<vertex> vertices;
-    std::vector<unsigned int> indices;
-    unsigned int VBO;
-    unsigned int VAO;
-    unsigned int EBO;
+    std::vector<u32> indices;
+    u32 VBO;
+    u32 VAO;
+    u32 EBO;
 };

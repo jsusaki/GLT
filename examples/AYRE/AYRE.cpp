@@ -54,7 +54,7 @@ public:
 
 		m_gui.m_func = [&]() {
 			// GUI Code
-			};
+		};
 
 		post_processor->End();
 		post_processor->Render();

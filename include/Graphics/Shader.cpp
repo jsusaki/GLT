@@ -9,22 +9,22 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path)
 {
     m_id = glCreateProgram();
 
-    std::string vertexSource = LoadFromFile(vertex_path);
-    std::string fragmentSource = LoadFromFile(fragment_path);
+    std::string vertex_source   = LoadFromFile(vertex_path);
+    std::string fragment_source = LoadFromFile(fragment_path);
 
-    u32 vertexShader = Compile(VERTEX, vertexSource);
-    u32 fragmentShader = Compile(FRAGMENT, fragmentSource);
+    u32 vertex_shader = Compile(VERTEX, vertex_source);
+    u32 fragment_shader = Compile(FRAGMENT, fragment_source);
 
-    Attach(vertexShader);
-    Attach(fragmentShader);
+    Attach(vertex_shader);
+    Attach(fragment_shader);
 
     Link();
 
-    Detach(vertexShader);
-    Detach(fragmentShader);
+    Detach(vertex_shader);
+    Detach(fragment_shader);
 
-    Delete(vertexShader);
-    Delete(fragmentShader);
+    Delete(vertex_shader);
+    Delete(fragment_shader);
 }
 
 Shader::~Shader()
@@ -137,47 +137,12 @@ u32 Shader::GetUniform(const std::string& name) const
     return location;
 }
 
-void Shader::SetUniform(const std::string& name, const s32& val)
-{
-    glUniform1i(GetUniform(name), val);
-}
-
-void Shader::SetUniform(const std::string& name, f32* val, s32 count)
-{
-    glUniform1fv(GetUniform(name), count, val);
-}
-
-void Shader::SetUniform(const std::string& name, s32* val, s32 count)
-{
-    glUniform1iv(GetUniform(name), count, val);
-}
-
-void Shader::SetUniform(const std::string& name, const f64& val)
-{
-    glUniform1f(GetUniform(name), val);
-}
-
-void Shader::SetUniform(const std::string& name, const f32& val)
-{
-    glUniform1f(GetUniform(name), val);
-}
-
-void Shader::SetUniform(const std::string& name, const vf2& vector)
-{
-    glUniform2f(GetUniform(name), vector.x, vector.y);
-}
-
-void Shader::SetUniform(const std::string& name, const vf3& vector)
-{
-    glUniform3f(GetUniform(name), vector.x, vector.y, vector.z);
-}
-
-void Shader::SetUniform(const std::string& name, const vf4& vector)
-{
-    glUniform4f(GetUniform(name), vector.x, vector.y, vector.z, vector.w);
-}
-
-void Shader::SetUniform(const std::string& name, const mf4x4& matrix)
-{
-    glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(matrix));
-}
+void Shader::SetUniform(const std::string& name, const s32& val)       { glUniform1i(GetUniform(name), val); }
+void Shader::SetUniform(const std::string& name, f32* val, s32 count)  { glUniform1fv(GetUniform(name), count, val); }
+void Shader::SetUniform(const std::string& name, s32* val, s32 count)  { glUniform1iv(GetUniform(name), count, val); }
+void Shader::SetUniform(const std::string& name, const f64& val)       { glUniform1f(GetUniform(name), val); }
+void Shader::SetUniform(const std::string& name, const f32& val)       { glUniform1f(GetUniform(name), val); }
+void Shader::SetUniform(const std::string& name, const vf2& vector)    { glUniform2f(GetUniform(name), vector.x, vector.y); }
+void Shader::SetUniform(const std::string& name, const vf3& vector)    { glUniform3f(GetUniform(name), vector.x, vector.y, vector.z); }
+void Shader::SetUniform(const std::string& name, const vf4& vector)    { glUniform4f(GetUniform(name), vector.x, vector.y, vector.z, vector.w); }
+void Shader::SetUniform(const std::string& name, const mf4x4& matrix)  { glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(matrix)); }

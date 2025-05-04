@@ -75,6 +75,12 @@
     <ClCompile Include="examples\CRT\CRT.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="examples\AYRE\AYRE.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Graphics\PostProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\glad\include\glad\glad.h">
@@ -1016,6 +1022,9 @@
     <ClInclude Include="include\GUI\GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics\PostProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic\basic.vs" />
@@ -1442,6 +1451,7 @@
     <None Include="res\shaders\post_processing\simple_crt.fs" />
     <None Include="res\shaders\post_processing\another_crt.fs" />
     <None Include="res\shaders\post_processing\grayscale.fs" />
+    <None Include="res\shaders\post_processing\ayre.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />

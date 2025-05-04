@@ -3,6 +3,7 @@
 #include "Graphics/Texture.h"
 #include "Graphics/Quad.h"
 #include "Graphics/Shader.h"
+#include "Graphics/PostProcessor.h"
 
 class Experiment : public Application
 {
@@ -12,9 +13,20 @@ public:
 public:
 	void Create() override
 	{
-		tex       = new Texture("res/images/wizardRL.png");
-		quad      = new Quad();
-		shader    = new Shader("res/shaders/post_processing/post_processing.vs", "res/shaders/post_processing/simple_crt.fs");
+		tex = new Texture("res/images/wizardRL.png");
+		quad = new Quad();
+
+		basic = new Shader(
+			"res/shaders/basic/basic.vs",
+			"res/shaders/basic/basic.fs"
+		);
+
+		shader = new Shader(
+			"res/shaders/post_processing/post_processing.vs", 
+			"res/shaders/post_processing/simple_crt.fs"
+		);
+
+		post_processor = new PostProcessor(m_window.Width(), m_window.Height());
 	}
 
 	void ProcessInput() override
@@ -29,6 +41,16 @@ public:
 
 	void Render() override
 	{
+		post_processor->Begin();
+
+		basic->Use();
+		basic->SetUniform("screen_texture", 0);
+
+		// Draw Texture
+		tex->Bind();
+		quad->Draw();
+
+		// Post Processing
 		shader->Use();
 		shader->SetUniform("screen_texture", 0);
 
@@ -54,9 +76,8 @@ public:
 		shader->SetUniform("bloom_threshold",       config.bloom_threshold);
 		shader->SetUniform("bloom_blend_factor",    config.bloom_blend_factor);
 
-		// Draw Texture
-		tex->Bind();
-		quad->Draw();
+		post_processor->End();
+		post_processor->Render();
 
 		// Draw Interface
 		m_gui.m_func = [&]() {
@@ -92,6 +113,8 @@ private:
 	Quad* quad = nullptr;
 	Texture* tex = nullptr;
 	Shader* shader = nullptr;
+	Shader* basic = nullptr;
+	PostProcessor* post_processor = nullptr;
 
 	struct SimpleCRTConfig
 	{
@@ -120,7 +143,6 @@ private:
 	} config;
 };
 
-/*
 int main()
 {
 	Experiment exp;
@@ -128,4 +150,3 @@ int main()
 		exp.Start();
 	return 0;
 }
-*/
