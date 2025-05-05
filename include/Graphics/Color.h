@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "Common.h"
+#include "Core/Common.h"
 
 struct Color
 {

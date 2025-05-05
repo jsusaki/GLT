@@ -1,3 +1,29 @@
+/*
+	Armored Core 6 - Coral Contact: Ayre
+
+	https://youtu.be/EgqUkCTS-Yc?t=116
+
+	https://armoredcore.fandom.com/wiki/Ayre
+
+	Scene sequence description
+		1. black background
+		2. small center red dot intensifying slowly
+		2. small center red dot splash sparking network
+		3. small to medium center red dot with glint sparking
+		4. large center red dot with glint unfold into a network
+
+	- random number generation techniques
+	- noise techniques (seed)
+	- network propagation techniques (growing)
+	- interpolation techniques
+	- glint techniques
+	- color gradient techniques
+
+	Particle System
+	Perlin Noise
+	Flow Field
+*/
+
 #include "Application.h"
 
 #include "Graphics/Texture.h"
@@ -13,17 +39,19 @@ public:
 public:
 	void Create() override
 	{
-		quad = new Quad();
+		quad  = new Quad();
 		basic = new Shader(
 			"res/shaders/basic/basic.vs",
 			"res/shaders/basic/ayre.fs"
 		);
+
+		
+
 	}
 
 	void ProcessInput() override
 	{
-		if (m_input.IsKeyPressed(GLFW_KEY_ESCAPE))
-			ShutDown();
+
 	}
 
 	void Simulate(f32 dt) override
@@ -46,10 +74,18 @@ public:
 
 private:
 	Quad* quad = nullptr;
-	Shader* shader = nullptr;
 	Shader* basic = nullptr;
 
 	f32 acc_time;
+
+
+	struct Particle
+	{
+		vf2 pos;
+		vf2 vel;
+	};
+
+	std::vector<Particle> particles;
 };
 
 int main()
