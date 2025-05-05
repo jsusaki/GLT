@@ -25,7 +25,7 @@ bool Application::Init(const std::string& title, s32 width, s32 height)
     m_elapsed_time = 0.0f;
     m_last_elapsed_time = 0.0f;
 
-    // Create application resources
+    // Create User Application Resources
     Create();
 
     return true;
@@ -47,7 +47,7 @@ bool Application::Start()
         m_elapsed_time = elapsed_time.count();
         m_last_elapsed_time = m_elapsed_time;
 
-        // Handle input
+        // Handle User Input
         ProcessInput();
 
         // Update input state
@@ -62,6 +62,8 @@ bool Application::Start()
         }
 
         // Rendering pipeline
+        PrepareRender();
+        // User Rendering
         Render();
 
         // GUI
@@ -71,7 +73,7 @@ bool Application::Start()
         m_window.SwapBuffers();
 
         // Update Frame Time
-        UpdateFrameTime();
+        //UpdateFrameTime();
     }
 
     return true;
@@ -97,13 +99,9 @@ void Application::UpdateFrameTime()
     }
 }
 
-// User Defined Functions
-void Application::Create() {}
-void Application::ProcessInput() {}
-void Application::Simulate(f32 dt) {}
-void Application::Render()
+void Application::PrepareRender()
 {
-    m_window.Clear({ 0,0,0,0 });
+    m_window.Clear({ 0, 0, 0, 0 });
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -113,3 +111,9 @@ void Application::Render()
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 }
+
+// User Defined Functions
+void Application::Create() {}
+void Application::ProcessInput() {}
+void Application::Simulate(f32 dt) {}
+void Application::Render() {}

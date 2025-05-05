@@ -665,6 +665,8 @@
     <None Include="res\shaders\basic\basic.fs" />
     <None Include="res\shaders\basic\basic.vs" />
     <None Include="res\shaders\basic\solid.fs" />
+    <None Include="res\shaders\model\model.fs" />
+    <None Include="res\shaders\model\model.vs" />
     <None Include="res\shaders\post_processing\another_crt.fs" />
     <None Include="res\shaders\basic\ayre.fs" />
     <None Include="res\shaders\post_processing\simple_crt.fs" />

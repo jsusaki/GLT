@@ -36,6 +36,7 @@ protected:
 
 private:
     void UpdateFrameTime();
+    void PrepareRender();
 
 private:
     // Timing

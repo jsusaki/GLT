@@ -63,7 +63,7 @@ bool Window::ShouldClose() { return glfwWindowShouldClose(m_window); }
 void Window::SetShouldClose() { glfwSetWindowShouldClose(m_window, true); }
 void Window::Close() { glfwDestroyWindow(m_window);  glfwTerminate(); }
 void Window::SwapBuffers() { glfwSwapBuffers(m_window); }
-void Window::Clear(const Color c)
+void Window::Clear(const Color& c)
 {
     glm::vec4 v = to_float(c);
     glClearColor(v.r, v.g, v.b, v.a);

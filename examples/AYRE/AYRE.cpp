@@ -31,6 +31,12 @@
 #include "Graphics/Shader.h"
 #include "Graphics/PostProcessor.h"
 
+struct Particle
+{
+	vf2 pos;
+	vf2 vel;
+};
+
 class Experiment : public Application
 {
 public:
@@ -78,16 +84,10 @@ private:
 
 	f32 acc_time;
 
-
-	struct Particle
-	{
-		vf2 pos;
-		vf2 vel;
-	};
-
 	std::vector<Particle> particles;
 };
 
+/*
 int main()
 {
 	Experiment exp;
@@ -95,3 +95,4 @@ int main()
 		exp.Start();
 	return 0;
 }
+*/

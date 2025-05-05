@@ -1,9 +1,9 @@
 #include "Application.h"
 
-class Experiment : public Application
+class Minimal : public Application
 {
 public:
-	Experiment() {}
+	Minimal() {}
 
 public:
 	void Create() override
@@ -32,8 +32,8 @@ private:
 
 int main()
 {
-	Experiment exp;
-	if (exp.Init("Experiment", 1280, 960))
-		exp.Start();
+	Minimal app;
+	if (app.Init("Minimal", 800, 600))
+		app.Start();
 	return 0;
 }

@@ -1468,6 +1468,8 @@
     <None Include="res\shaders\post_processing\grayscale.fs" />
     <None Include="res\shaders\basic\ayre.fs" />
     <None Include="res\shaders\basic\solid.fs" />
+    <None Include="res\shaders\model\model.vs" />
+    <None Include="res\shaders\model\model.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />

@@ -10,6 +10,7 @@
 #include "Color.h"
 #include "Shader.h"
 
+// NOTE: there is another vertex struct in Quad.h, define which one to use
 struct vertex
 {
 	vf3 position;
@@ -25,7 +26,7 @@ struct mesh
 
 	mesh() {};
 
-	mesh(std::string filepath) 
+	mesh(const std::string& filepath) 
 	{ 
 		load_from_file(filepath);
 
@@ -94,9 +95,9 @@ struct mesh
 
 	~mesh()
 	{
-		//glDeleteVertexArrays(1, &vao);
-		//glDeleteBuffers(1, &vbo);
-		//glDeleteBuffers(1, &ibo);
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ibo);
 	}
 
 	void draw(s32 mode)
@@ -106,11 +107,11 @@ struct mesh
 		glBindVertexArray(0);
 	}
 
-	void load_from_file(std::string filepath)
+	void load_from_file(const std::string& filepath)
 	{
 		std::ifstream file(filepath);
 		if (!file.is_open())
-			std::cout << "File does not exist\n";
+			std::cout << "ERROR: File does not exist\n";
 
 		// buffers
 		std::vector<vf3> vertex_points;
@@ -129,12 +130,14 @@ struct mesh
 				file >> p.x >> p.y >> p.z;
 				vertex_points.push_back(p);
 			}
+
 			if (prefix == "vn") // Normal
 			{
 				vf3 n;
 				file >> n.x >> n.y >> n.z;
 				vertex_normals.push_back(n);
 			}
+
 			if (prefix == "f") // Face
 			{
 				// Buffers
@@ -159,14 +162,20 @@ struct mesh
 				vertex v;
 				v.position = vertex_points[vertex_indices[i][j]];
 				v.normal   = vertex_normals[vertex_normal_indices[i][j]];
-
-				const vf4& c = to_float({ 0, 102, 178, 128 });
-				v.color = { c.r, c.g, c.b, c.a };
-
+				v.color    = to_float({ 255, 255, 255, 255 });
 				vertices.push_back(v);
 				indices.push_back(vertices.size() - 1);
 			}
 		}
+	}
+};
+
+// TODO: bring Quad.h here
+struct quad : public mesh
+{
+	quad()
+	{
+
 	}
 };
 
@@ -240,7 +249,7 @@ struct model
 	vf3 m_scale;
 	f32 m_angle;
 
-	model(std::string filepath)
+	model(const std::string& filepath)
 	{
 		m_model    = mf4x4(1.0f);
 		m_position = vf3(0.0f, 0.0f, 0.0f);
@@ -250,7 +259,7 @@ struct model
 		m_mesh     = mesh(filepath);
 	}
 
-	model(mesh m)
+	model(mesh& m)
 	{
 		m_model    = mf4x4(1.0f);
 		m_position = vf3(0.0f, 0.0f, 0.0f);
@@ -277,7 +286,7 @@ struct model
 		shader->Unuse();
 	}
 
-	void scale(vf3 s) { m_scale *= s; }
-	void rotate(f32 angl, vf3 axis) { m_rotation += axis; m_angle += angl; }
+	void scale(vf3 scale) { m_scale *= scale; }
+	void rotate(f32 angle, vf3 axis) { m_rotation += axis; m_angle += angle; }
 	void translate(vf3 pos) { m_position = pos; }
 };

@@ -33,6 +33,7 @@ public:
     {
         ImGui::Begin("FPS");
         ImGui::Text("FPS: average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::Checkbox("Show ImGui Demo", &show_imgui_demo);
         if (show_imgui_demo)  ImGui::ShowDemoWindow();
         ImGui::End();
     }
@@ -46,7 +47,7 @@ public:
         {
             // User Interface
             General();
-            m_func();
+            if (m_func) m_func();
         }
 
         ImGui::Render();
@@ -63,7 +64,7 @@ public:
     bool IsWindowFocused() const { return ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow); }
 
 public:
-    std::function<void()> m_func;
+    std::function<void()> m_func = nullptr;
 
 private:
     ImGuiIO io;
