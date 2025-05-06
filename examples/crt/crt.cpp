@@ -10,6 +10,38 @@ class Experiment : public Application
 public:
 	Experiment() {}
 
+	Quad* quad = nullptr;
+	Texture* tex = nullptr;
+	Shader* shader = nullptr;
+	Shader* basic = nullptr;
+	PostProcessor* post_processor = nullptr;
+
+	struct SimpleCRTConfig
+	{
+		float scanline_amplitude = 0.3f;
+		float scanline_frequency = 1920.0f;
+		float scanline_offset = 1.20f;
+		float primary_curvature = 0.0125f;
+		float secondary_curvature = 0.0f;
+		float vignette_radius = 0.8f;
+		float vignette_softness = 0.25f;
+		float blur_radius = 0.003f;
+
+		float blend_factor = 0.2f;
+		float gamma = 0.8f;
+		float contrast = 1.1f;
+		float saturation = 1.15f;
+		float brightness = 1.10f;
+		float color_correction = 1.0f;
+
+		float phosphor_dot_scale = 640.0f;
+		float phosphor_dot_softness = 0.15f;
+
+		float bloom_intensity = 0.5f;
+		float bloom_threshold = 0.15f;
+		float bloom_blend_factor = 0.5f;
+	} config;
+
 public:
 	void Create() override
 	{
@@ -109,38 +141,7 @@ public:
 		};
 	}
 
-private:
-	Quad* quad = nullptr;
-	Texture* tex = nullptr;
-	Shader* shader = nullptr;
-	Shader* basic = nullptr;
-	PostProcessor* post_processor = nullptr;
 
-	struct SimpleCRTConfig
-	{
-		float scanline_amplitude = 0.3f;
-		float scanline_frequency = 1920.0f;
-		float scanline_offset = 1.20f;
-		float primary_curvature = 0.0125f;
-		float secondary_curvature = 0.0f;
-		float vignette_radius = 0.8f;
-		float vignette_softness = 0.25f;
-		float blur_radius = 0.003f;
-
-		float blend_factor = 0.2f;
-		float gamma = 0.8f;
-		float contrast = 1.1f;
-		float saturation = 1.15f;
-		float brightness = 1.10f;
-		float color_correction = 1.0f;
-
-		float phosphor_dot_scale    = 640.0f;
-		float phosphor_dot_softness = 0.15f;
-
-		float bloom_intensity = 0.5f;
-		float bloom_threshold = 0.15f;
-		float bloom_blend_factor = 0.5f;
-	} config;
 };
 
 /*

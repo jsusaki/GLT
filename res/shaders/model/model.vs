@@ -3,6 +3,7 @@
 in vec3 vs_position;
 in vec3 vs_normal;
 in vec4 vs_color;
+in vec4 vs_uv;
 
 out vec4 fs_color;
 

@@ -87,6 +87,9 @@
     <ClCompile Include="examples\minimal\minimal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="examples\triangle\triangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\glad\include\glad\glad.h">
@@ -1042,8 +1045,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\basic\basic.vs" />
-    <None Include="res\shaders\basic\basic.fs" />
+    <None Include="res\shaders\basic\default.vs" />
+    <None Include="res\shaders\basic\texture.fs" />
     <None Include="lib\glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -1470,6 +1473,8 @@
     <None Include="res\shaders\basic\solid.fs" />
     <None Include="res\shaders\model\model.vs" />
     <None Include="res\shaders\model\model.fs" />
+    <None Include="res\shaders\post_processing\solid.fs" />
+    <None Include="res\shaders\basic\default.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />

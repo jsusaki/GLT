@@ -10,6 +10,12 @@ class Experiment : public Application
 public:
 	Experiment() {}
 
+	Quad* quad = nullptr;
+	Texture* tex = nullptr;
+	Shader* shader = nullptr;
+	Shader* basic = nullptr;
+	PostProcessor* post_processor = nullptr;
+
 public:
 	void Create() override
 	{
@@ -60,12 +66,6 @@ public:
 		post_processor->Render();
 	}
 
-private:
-	Quad* quad = nullptr;
-	Texture* tex = nullptr;
-	Shader* shader = nullptr;
-	Shader* basic = nullptr;
-	PostProcessor* post_processor = nullptr;
 };
 
 /*

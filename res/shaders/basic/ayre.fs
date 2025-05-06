@@ -6,8 +6,7 @@ in vec2 TexCoords;
 uniform float acc_time;
 uniform vec2 resolution;
 
-void main() {
-    vec2 uv = TexCoords;
-    float t = acc_time;
-}
+void main() 
+{
 
+}

@@ -6,10 +6,10 @@
 
 #include "Common.h"
 
-class random
+class Random
 {
 public:
-	random(size_t seed = std::random_device{}()) : mt(seed) {}
+	Random(size_t seed = std::random_device{}()) : mt(seed) {}
 
 public:
 	void seed(std::optional<size_t> seed = std::nullopt)

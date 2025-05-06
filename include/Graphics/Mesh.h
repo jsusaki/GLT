@@ -10,26 +10,50 @@
 #include "Color.h"
 #include "Shader.h"
 
-// NOTE: there is another vertex struct in Quad.h, define which one to use
 struct vertex
 {
 	vf3 position;
 	vf3 normal;
 	vf4 color;
+	vf2 uv;
 };
 
-struct mesh
+struct Mesh
 {
 	u32 vao, vbo, ibo;
 	std::vector<vertex> vertices;
 	std::vector<u32> indices;
 
-	mesh() {};
+	Mesh() {};
 
-	mesh(const std::string& filepath) 
-	{ 
+	Mesh(const std::string& filepath)
+	{
 		load_from_file(filepath);
+		setup_buffers();
+	}
 
+	Mesh(std::vector<vertex> v, std::vector<u32> i)
+	{
+		vertices = v; indices = i;
+		setup_buffers();
+	}
+
+	~Mesh()
+	{
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ibo);
+	}
+
+	void draw(s32 mode)
+	{
+		glBindVertexArray(vao);
+		glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+
+	void setup_buffers()
+	{
 		// Generate vertex buffers
 		glGenVertexArrays(1, &vao);
 		glGenBuffers(1, &vbo);
@@ -46,64 +70,23 @@ struct mesh
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
 		// Vertex Attribute configuration
+		// Position attribute
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, position));
 
+		// Normal attribute
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, normal));
 
+		// Color attribute
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, color));
+
+		// Texture coordinate attribute
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, uv));
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-	}
-
-	mesh(std::vector<vertex> v, std::vector<u32> i)
-	{
-		vertices = v;
-		indices  = i;
-
-		// Generate vertex buffers
-		glGenVertexArrays(1, &vao);
-        glGenBuffers(1, &vbo);
-        glGenBuffers(1, &ibo);
-		// Bind vertex array object
-        glBindVertexArray(vao);
-
-        // Vertex Buffer Object
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-
-		// Index Buffer Object
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * indices.size(), indices.data(), GL_STATIC_DRAW);
-		
-		// Vertex Attribute configuration
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, position));
-
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, normal));
-
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, color));
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
-	}
-
-	~mesh()
-	{
-		glDeleteVertexArrays(1, &vao);
-		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &ibo);
-	}
-
-	void draw(s32 mode)
-	{
-		glBindVertexArray(vao);
-		glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
@@ -116,6 +99,7 @@ struct mesh
 		// buffers
 		std::vector<vf3> vertex_points;
 		std::vector<vf3> vertex_normals;
+		std::vector<vf2> vertex_texcoords;
 
 		std::vector<vi3> vertex_indices;
 		std::vector<vi2> vertex_texture_indices;
@@ -130,15 +114,19 @@ struct mesh
 				file >> p.x >> p.y >> p.z;
 				vertex_points.push_back(p);
 			}
-
-			if (prefix == "vn") // Normal
+			else if (prefix == "vt") // Texture
+			{
+				vf2 t;
+				file >> t.x >> t.y;
+				vertex_texcoords.push_back(t);
+			}
+			else if (prefix == "vn") // Normal
 			{
 				vf3 n;
 				file >> n.x >> n.y >> n.z;
 				vertex_normals.push_back(n);
 			}
-
-			if (prefix == "f") // Face
+			else if (prefix == "f") // Face
 			{
 				// Buffers
 				u8 slash;
@@ -163,6 +151,7 @@ struct mesh
 				v.position = vertex_points[vertex_indices[i][j]];
 				v.normal   = vertex_normals[vertex_normal_indices[i][j]];
 				v.color    = to_float({ 255, 255, 255, 255 });
+				v.uv       = vertex_texcoords[vertex_texture_indices[i][j]];
 				vertices.push_back(v);
 				indices.push_back(vertices.size() - 1);
 			}
@@ -170,29 +159,55 @@ struct mesh
 	}
 };
 
-// TODO: bring Quad.h here
-struct quad : public mesh
+struct line : public Mesh
 {
-	quad()
+	line(vf3 a, vf3 b, vf4 color = { 1.0f, 1.0f, 1.0f, 1.0f })
 	{
-
+		vertices = {
+			{ a, { 0.0f,0.0f,1.0f }, color, { 0.0f, 0.0f } },
+			{ b, { 0.0f,0.0f,1.0f }, color, { 0.0f, 0.0f } },
+		};
+		indices = { 0, 1 };
+		setup_buffers();
 	}
 };
 
-struct cube : public mesh
+struct quad : public Mesh
+{
+	quad()
+	{
+		vertices = {
+			//    position           normal            color (white)			// uv
+			{{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 0.0f }}, // bottom-left
+			{{ 1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f }}, // bottom-right
+			{{ 1.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 1.0f }}, // top-right
+			{{-1.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 1.0f }}, // top-left
+		};
+
+		indices = {
+			0, 1, 2,
+			2, 3, 0
+		};
+
+		setup_buffers();
+	}
+};
+
+struct cube : public Mesh
 {
 	cube()
 	{
 		vertices = {
 												     // color: white
-			{{-1.0f, -1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v0
-			{{ 1.0f, -1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v1
-			{{ 1.0f,  1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v2
-			{{-1.0f,  1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v3
-			{{-1.0f, -1.0f, 1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v4
-			{{ 1.0f, -1.0f, 1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v5
-			{{ 1.0f,  1.0f, 1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v6
-			{{-1.0f,  1.0f, 1.0f},{0.0f, 0.0f,-1.0f},{1.0f, 1.0f, 1.0f, 1.0f}}, //v7
+			{{-1.0f, -1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 0.0f }}, //v0
+			{{ 1.0f, -1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f }}, //v1
+			{{ 1.0f,  1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 1.0f }}, //v2
+			{{-1.0f,  1.0f,-1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 1.0f }}, //v3
+
+			{{-1.0f, -1.0f, 1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 0.0f }}, //v4
+			{{ 1.0f, -1.0f, 1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f }}, //v5
+			{{ 1.0f,  1.0f, 1.0f},{1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 1.0f }}, //v6
+			{{-1.0f,  1.0f, 1.0f},{0.0f, 0.0f,-1.0f},{1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 1.0f }}, //v7
 		};
 
 		indices = { 
@@ -210,40 +225,14 @@ struct cube : public mesh
 			3,7   // v3-v7
 		};
 
-		// Generate vertex buffers
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
-		glGenBuffers(1, &ibo);
-		// Bind vertex array object
-		glBindVertexArray(vao);
-
-		// Vertex Buffer Object
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-
-		// Index Buffer Object
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(u32) * indices.size(), indices.data(), GL_STATIC_DRAW);
-
-		// Vertex Attribute configuration
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, position));
-
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, normal));
-
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)offsetof(vertex, color));
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		setup_buffers();
 	}
 };
 
 struct model
 {
 	mf4x4 m_model;
-	mesh m_mesh;
+	Mesh m_mesh;
 	vf3 m_position;
 	vf3 m_rotation;
 	vf3 m_scale;
@@ -256,10 +245,10 @@ struct model
 		m_rotation = vf3(0.0f, 0.0f, 0.0f);
 		m_scale    = vf3(1.0f, 1.0f, 1.0f);
 		m_angle    = 0.0f;
-		m_mesh     = mesh(filepath);
+		m_mesh     = Mesh(filepath);
 	}
 
-	model(mesh& m)
+	model(Mesh& m)
 	{
 		m_model    = mf4x4(1.0f);
 		m_position = vf3(0.0f, 0.0f, 0.0f);

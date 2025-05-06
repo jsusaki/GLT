@@ -5,7 +5,6 @@ class Minimal : public Application
 public:
 	Minimal() {}
 
-public:
 	void Create() override
 	{
 
@@ -25,15 +24,13 @@ public:
 	{
 
 	}
-
-private:
-
 };
 
+/*
 int main()
 {
 	Minimal app;
 	if (app.Init("Minimal", 800, 600))
 		app.Start();
-	return 0;
 }
+*/
