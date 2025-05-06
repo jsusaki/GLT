@@ -22,7 +22,8 @@ public:
 			{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }
 		};
 		std::vector<u32> indices = { 0, 1, 2 };
-		mesh   = std::make_unique<Mesh>(vertices, indices);
+		mesh = std::make_unique<Mesh>(vertices, indices);
+
 		// Define Shader
 		shader = std::make_unique<Shader>("res/shaders/basic/default.vs", "res/shaders/basic/default.fs");
 	}

@@ -57,9 +57,6 @@
     <ClCompile Include="lib\imgui\implot_items.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\load_image\load_image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
     <ClCompile Include="include\Graphics\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\CRT\CRT.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="examples\AYRE\AYRE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,12 +76,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\Graphics\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\minimal\minimal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\triangle\triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

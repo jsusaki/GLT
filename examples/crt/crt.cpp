@@ -5,10 +5,10 @@
 #include "Graphics/Shader.h"
 #include "Graphics/PostProcessor.h"
 
-class Experiment : public Application
+class CRT : public Application
 {
 public:
-	Experiment() {}
+	CRT() {}
 
 	Quad* quad = nullptr;
 	Texture* tex = nullptr;
@@ -144,12 +144,10 @@ public:
 
 };
 
-/*
 int main()
 {
-	Experiment exp;
-	if (exp.Init("Experiment", 1280, 960))
-		exp.Start();
+	CRT demo;
+	if (demo.Init("Experiment", 1280, 960))
+		demo.Start();
 	return 0;
 }
-*/

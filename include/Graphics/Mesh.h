@@ -172,6 +172,21 @@ struct line : public Mesh
 	}
 };
 
+struct triangle : public Mesh
+{
+	triangle()
+	{
+		vertices = {
+			// position               normal                color                       uv
+			{ {  0.0f,  0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f }, { 0.5f, 1.0f } },
+			{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
+			{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f }, { 1.0f, 0.0f } }
+		};
+		indices = { 0, 1, 2 };
+		setup_buffers();
+	}
+};
+
 struct quad : public Mesh
 {
 	quad()

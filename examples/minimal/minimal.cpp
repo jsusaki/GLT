@@ -26,11 +26,9 @@ public:
 	}
 };
 
-/*
 int main()
 {
-	Minimal app;
-	if (app.Init("Minimal", 800, 600))
-		app.Start();
+	Minimal demo;
+	if (demo.Init("Minimal", 800, 600))
+		demo.Start();
 }
-*/

@@ -179,9 +179,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="examples\AYRE\AYRE.cpp" />
-    <ClCompile Include="examples\CRT\CRT.cpp" />
-    <ClCompile Include="examples\minimal\minimal.cpp" />
-    <ClCompile Include="examples\triangle\triangle.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -201,7 +198,6 @@
     <ClCompile Include="lib\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="lib\stb\stb_image.cpp" />
     <ClCompile Include="include\Application.cpp" />
-    <ClCompile Include="examples\load_image\load_image.cpp" />
     <ClCompile Include="include\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>

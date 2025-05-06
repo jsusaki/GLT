@@ -5,10 +5,10 @@
 #include "Graphics/Shader.h"
 #include "Graphics/PostProcessor.h"
 
-class Experiment : public Application
+class Image : public Application
 {
 public:
-	Experiment() {}
+	Image() {}
 
 	Quad* quad = nullptr;
 	Texture* tex = nullptr;
@@ -22,15 +22,8 @@ public:
 		// Load and Initialize Resources
 		tex = new Texture("res/images/wizardRL.png");
 		quad = new Quad();
-		basic = new Shader(
-			"res/shaders/basic/basic.vs",
-			"res/shaders/basic/basic.fs"
-		);
-
-		shader = new Shader(
-			"res/shaders/post_processing/post_processing.vs",
-			"res/shaders/post_processing/grayscale.fs"
-		);
+		basic = new Shader("res/shaders/basic/default.vs", "res/shaders/basic/default.fs");
+		shader = new Shader("res/shaders/post_processing/post_processing.vs", "res/shaders/post_processing/grayscale.fs");
 
 		post_processor = new PostProcessor(m_window.Width(), m_window.Height());
 	}
@@ -68,12 +61,10 @@ public:
 
 };
 
-/*
 int main()
 {
-	Experiment exp;
-	if (exp.Init("Experiment", 1280, 960))
-		exp.Start();
+	Image demo;
+	if (demo.Init("Image", 1280, 960))
+		demo.Start();
 	return 0;
 }
-*/

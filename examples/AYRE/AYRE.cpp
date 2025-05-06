@@ -28,7 +28,6 @@
 
 #include "Graphics/Mesh.h"
 #include "Graphics/Texture.h"
-// #include "Graphics/Quad.h"
 #include "Graphics/Shader.h"
 #include "Graphics/PostProcessor.h"
 
@@ -71,7 +70,7 @@ public:
 public:
 	void Create() override
 	{
-		shader = new Shader("res/shaders/basic/basic.vs", "res/shaders/basic/basic.fs");
+		shader = new Shader("res/shaders/basic/default.vs", "res/shaders/basic/default.fs");
 
 		noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
 
