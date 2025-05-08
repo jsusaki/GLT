@@ -178,7 +178,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\AYRE\AYRE.cpp" />
+    <ClCompile Include="examples\flow_field\flow_field.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -659,6 +659,8 @@
     <None Include="lib\glm\gtx\vector_angle.inl" />
     <None Include="lib\glm\gtx\vector_query.inl" />
     <None Include="lib\glm\gtx\wrap.inl" />
+    <None Include="res\shaders\basic\circle_sprite.fs" />
+    <None Include="res\shaders\basic\circle_sprite.vs" />
     <None Include="res\shaders\basic\texture.fs" />
     <None Include="res\shaders\basic\default.vs" />
     <None Include="res\shaders\basic\default.fs" />

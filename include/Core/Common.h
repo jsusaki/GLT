@@ -44,3 +44,7 @@ using md4x4 = glm::dmat4x4;
 // Quaternion types
 using qf32 = glm::f32quat;
 using qf64 = glm::f64quat;
+
+
+constexpr f32 PI  = 3.14159265f;
+constexpr f32 TAU = PI*2;

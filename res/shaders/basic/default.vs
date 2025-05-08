@@ -9,9 +9,15 @@ out vec3 Normal;
 out vec4 Color;
 out vec2 TexCoords;
 
+uniform mat4 projection;
+
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
+    gl_Position = projection * vec4(aPos, 1.0);
+
+    //gl_Position = vec4(aPos, 1.0);
+    //gl_Position = projection * view * model * vec4(aPos, 1.0);
+
     Normal = aNormal;
     Color = aColor;
     TexCoords = aTexCoords;

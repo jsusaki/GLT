@@ -69,7 +69,7 @@
     <ClCompile Include="include\Graphics\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\AYRE\AYRE.cpp">
+    <ClCompile Include="examples\flow_field\flow_field.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\Graphics\PostProcessor.cpp">
@@ -1463,6 +1463,8 @@
     <None Include="res\shaders\model\model.fs" />
     <None Include="res\shaders\post_processing\solid.fs" />
     <None Include="res\shaders\basic\default.fs" />
+    <None Include="res\shaders\basic\circle_sprite.vs" />
+    <None Include="res\shaders\basic\circle_sprite.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />

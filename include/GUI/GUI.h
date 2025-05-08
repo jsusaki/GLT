@@ -40,18 +40,23 @@ public:
     
     void Render()
     {
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        if (show_gui)
         {
-            // User Interface
-            General();
-            if (m_func) m_func();
-        }
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+            {
+                // User Interface
+                if (show_fps)
+                {
+                    General();
+                }
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+                if (m_func) m_func();
+            }
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
     }
 
     void Shutdown()
@@ -65,6 +70,8 @@ public:
 
 public:
     std::function<void()> m_func = nullptr;
+    bool show_gui = true;
+    bool show_fps = true;
 
 private:
     ImGuiIO io;
