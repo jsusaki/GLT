@@ -1,27 +1,7 @@
 /*
-	Armored Core 6 - Coral Contact: Ayre
-
-	https://youtu.be/EgqUkCTS-Yc?t=116
-
-	https://armoredcore.fandom.com/wiki/Ayre
-
-	Scene sequence description
-		1. black background
-		2. small center red dot intensifying slowly
-		2. small center red dot splash sparking network
-		3. small to medium center red dot with glint sparking
-		4. large center red dot with glint unfold into a network
-
-	- random number generation techniques
-	- noise techniques (seed)
-	- network propagation techniques (growing)
-	- interpolation techniques
-	- glint techniques
-	- color gradient techniques
-
-	Particle System
-	Perlin Noise
 	Flow Field
+	Perlin Noise
+	Particle System
 */
 
 #include "Application.h"
@@ -39,8 +19,9 @@ class FlowField : public Application
 public:
 	FlowField() {}
 
-	Shader* shader = nullptr;
-	Shader* circle_shader = nullptr;
+	mf4x4 proj;
+	std::unique_ptr<Shader> shader = nullptr;
+	std::unique_ptr<Shader> circle_shader = nullptr;
 
 	struct Particle
 	{
@@ -54,7 +35,7 @@ public:
 
 	s32 w;
 	s32 h;
-	s32 scale = 30;
+	s32 scale = 30; // 10 20 40 60
 	std::vector<std::unique_ptr<line>> vector_lines;
 	std::vector<vf3> flowfield;
 	f32 length = 20.0f;
@@ -73,9 +54,7 @@ public:
 	s32 noise_octaves = 6;
 	f32 noise_lacunarity = 2.0f;
 	f32 noise_gain = 0.5f;
-
-	mf4x4 proj;
-
+	f32 noise_scale = 1.00f;
 
 	bool update = false;
 	bool draw_lines = false;
@@ -101,7 +80,7 @@ public:
 		{
 			for (s32 x = 0; x < cols; x++)
 			{
-				f32 angle = noise.GetNoise(static_cast<f32>(x), static_cast<f32>(y), z) * TAU;
+				f32 angle = noise.GetNoise(static_cast<f32>(x * noise_scale), static_cast<f32>(y * noise_scale), z) * TAU;
 				vf3 dir = { std::cosf(angle), std::sinf(angle), 0.0f };
 				//vf3 dir = curl(x, y, z);
 				//dir = glm::normalize(dir) * 0.10f;
@@ -155,8 +134,8 @@ public:
 	{
 		m_gui.show_fps = false;
 
-		shader = new Shader("res/shaders/basic/default.vs", "res/shaders/basic/default.fs");
-		circle_shader = new Shader("res/shaders/basic/circle_sprite.vs", "res/shaders/basic/circle_sprite.fs");
+		shader        = std::make_unique<Shader>("res/shaders/basic/default.vs", "res/shaders/basic/default.fs");
+		circle_shader = std::make_unique<Shader>("res/shaders/basic/circle.vs", "res/shaders/basic/circle.fs");
 
 		noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 		//noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
@@ -168,7 +147,6 @@ public:
 		noise.SetFractalOctaves(noise_octaves);
 		noise.SetFractalLacunarity(noise_lacunarity);
 		noise.SetFractalGain(noise_gain);
-
 
 		w = m_window.Width();
 		h = m_window.Height();
@@ -200,7 +178,6 @@ public:
 		glBindVertexArray(0);
 
 		glEnable(GL_PROGRAM_POINT_SIZE);
-
 	}
 
 	void ProcessInput() override
@@ -244,9 +221,8 @@ public:
 			{
 				for (s32 x = 0; x < cols; x++)
 				{
-					f32 angle = noise.GetNoise(static_cast<f32>(x), static_cast<f32>(y), z) * TAU;
+					f32 angle = noise.GetNoise(static_cast<f32>(x * noise_scale), static_cast<f32>(y * noise_scale), z) * TAU;
 					vf3 dir = { std::cosf(angle), std::sinf(angle), 0.0f };
-					//dir = glm::normalize(dir) * 0.1f;
 					//vf3 dir = curl(x, y, z);
 					//dir = glm::normalize(dir) * 0.1f;
 					flowfield.push_back(dir);
@@ -260,39 +236,42 @@ public:
 			z += dt * 100.0f;
 		}
 
-		// Update Particles
-		for (auto& p : particles) 
+		if (draw_particles)
 		{
-			s32 cols = std::floor(w / scale);
-			s32 rows = std::floor(h / scale);
+			// Update Particles
+			for (auto& p : particles)
+			{
+				s32 cols = std::floor(w / scale);
+				s32 rows = std::floor(h / scale);
 
-			s32 gx = s32(p.pos.x / scale);
-			s32 gy = s32(p.pos.y / scale);
+				s32 gx = s32(p.pos.x / scale);
+				s32 gy = s32(p.pos.y / scale);
 
-			gx = std::clamp(gx, 0, cols - 1);
-			gy = std::clamp(gy, 0, rows - 1);
+				gx = std::clamp(gx, 0, cols - 1);
+				gy = std::clamp(gy, 0, rows - 1);
 
-			s32 idx = gy * cols + gx;
+				s32 idx = gy * cols + gx;
 
-			p.acc = flowfield[idx];
-			p.vel += p.acc;
+				p.acc = flowfield[idx];
+				p.vel += p.acc;
 
-			// Clamp velocity
-			if (glm::length(p.vel) > max_speed)
-				p.vel = glm::normalize(p.vel) * max_speed;
+				// Clamp velocity
+				if (glm::length(p.vel) > max_speed)
+					p.vel = glm::normalize(p.vel) * max_speed;
 
-			p.pos += p.vel * dt;
-			p.acc *= 0.0f;
+				p.pos += p.vel * dt;
+				p.acc *= 0.0f;
 
-			if (p.pos.x < 0) p.pos.x = w;;
-			if (p.pos.x > w) p.pos.x = 0;
-			if (p.pos.y < 0) p.pos.y = h;
-			if (p.pos.y > h) p.pos.y = 0;
+				if (p.pos.x < 0) p.pos.x = w;;
+				if (p.pos.x > w) p.pos.x = 0;
+				if (p.pos.y < 0) p.pos.y = h;
+				if (p.pos.y > h) p.pos.y = 0;
+			}
+
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Particle) * particles.size(), particles.data());
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Particle) * particles.size(), particles.data());
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	void Render() override
@@ -330,7 +309,7 @@ public:
 
 		m_gui.m_func = [&]() {
 			ImGui::Begin("Flow Field Parameters");
-			//ImGui::SliderInt("Flow Field Scale",     &scale, 10, 100);    // larger the value, sparser the flow
+			ImGui::SliderFloat("Noise Scale",        &noise_scale, 0.01f, 2.0f); // larger the value, erratic the flow
 			ImGui::SliderFloat("Frequency",          &noise_frequency,   0.0f, 2.0f); // larger the value, erratic the flow
 			ImGui::SliderInt("Octaves",              &noise_octaves,     1, 20);
 			ImGui::SliderFloat("Lacunarity",         &noise_lacunarity,  0.0f, 4.0f);
