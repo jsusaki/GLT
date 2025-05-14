@@ -178,7 +178,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\flow_field\flow_field.cpp" />
+    <ClCompile Include="examples\Ayre\ayre.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -207,7 +207,8 @@
     <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Graphics\Mesh.h" />
     <ClInclude Include="include\Graphics\PostProcessor.h" />
-    <ClInclude Include="include\Graphics\Quad.h" />
+    <ClInclude Include="include\Graphics\Sprite.h" />
+    <ClInclude Include="include\Graphics\TextureQuad.h" />
     <ClInclude Include="include\Core\Random.h" />
     <ClInclude Include="include\Graphics\Shader.h" />
     <ClInclude Include="include\Graphics\Texture.h" />
@@ -659,16 +660,16 @@
     <None Include="lib\glm\gtx\vector_angle.inl" />
     <None Include="lib\glm\gtx\vector_query.inl" />
     <None Include="lib\glm\gtx\wrap.inl" />
-    <None Include="res\shaders\basic\circle_sprite.fs" />
-    <None Include="res\shaders\basic\circle_sprite.vs" />
+    <None Include="res\shaders\basic\circle.fs" />
+    <None Include="res\shaders\basic\circle.vs" />
     <None Include="res\shaders\basic\texture.fs" />
     <None Include="res\shaders\basic\default.vs" />
     <None Include="res\shaders\basic\default.fs" />
     <None Include="res\shaders\basic\solid.fs" />
+    <None Include="res\shaders\basic\texture.vs" />
     <None Include="res\shaders\model\model.fs" />
     <None Include="res\shaders\model\model.vs" />
     <None Include="res\shaders\post_processing\another_crt.fs" />
-    <None Include="res\shaders\basic\ayre.fs" />
     <None Include="res\shaders\post_processing\simple_crt.fs" />
     <None Include="res\shaders\post_processing\grayscale.fs" />
     <None Include="res\shaders\post_processing\no_effect.fs" />

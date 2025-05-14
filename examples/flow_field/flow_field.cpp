@@ -9,7 +9,6 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Texture.h"
 #include "Graphics/Shader.h"
-#include "Graphics/PostProcessor.h"
 
 #include "Core/Random.h"
 #include "FastNoiseLite/FastNoiseLite.h"
@@ -23,6 +22,7 @@ public:
 	std::unique_ptr<Shader> shader = nullptr;
 	std::unique_ptr<Shader> circle_shader = nullptr;
 
+	// Particle
 	struct Particle
 	{
 		vf2 pos;
@@ -33,19 +33,44 @@ public:
 
 	std::vector<Particle> particles;
 
-	s32 w;
-	s32 h;
-	s32 scale = 30; // 10 20 40 60
-	std::vector<std::unique_ptr<line>> vector_lines;
-	std::vector<vf3> flowfield;
-	f32 length = 20.0f;
-	f32 z = 0.0f;
-	f32 max_speed = 80.0f;
-
-	// Particle
 	s32 n_particles = 500;
 	u32 VAO, VBO;
 	f32 particle_size = 6.0f;
+
+	// Flow Field
+	struct line : public Mesh
+	{
+		line(vf3 a, vf3 b, vf4 color = { 1.0f, 1.0f, 1.0f, 1.0f })
+		{
+			vertices = {
+				{ a, { 0.0f,0.0f,1.0f }, color, { 0.0f, 0.0f } },
+				{ b, { 0.0f,0.0f,1.0f }, color, { 0.0f, 0.0f } },
+			};
+			indices = { 0, 1 };
+			setup_buffers();
+		}
+
+		void update(vf3 start, vf3 end)
+		{
+			vertices[0].position = start;
+			vertices[1].position = end;
+
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, 2 * sizeof(vertex), vertices.data());
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+	};
+
+	// TODO: initialize with beautiful default parameter like faded memory
+
+	s32 w = 0, h = 0;
+	s32 rows = 0, cols = 0;
+	s32 scale = 13; // 10 20 40 60
+	std::vector<std::unique_ptr<line>> vector_lines;
+	std::vector<vf3> flow_field;
+	f32 length = 20.0f;
+	f32 z = 0.0f;
+	f32 max_speed = 80.0f;
 
 	// RNG and Noise
 	Random rng;
@@ -54,42 +79,33 @@ public:
 	s32 noise_octaves = 6;
 	f32 noise_lacunarity = 2.0f;
 	f32 noise_gain = 0.5f;
-	f32 noise_scale = 1.00f;
+	f32 noise_scale = 1.00f; // Make the noise smoother
 
-	bool update = false;
-	bool draw_lines = false;
+	// Control
+	bool clear_screen = false;
 	bool draw_particles = true;
-	bool clear = false;
-
-	void update_line(line* l, const vf3& start, const vf3& end)
-	{
-		l->vertices[0].position = start;
-		l->vertices[1].position = end;
-
-		glBindBuffer(GL_ARRAY_BUFFER, l->vbo);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, 2 * sizeof(vertex), l->vertices.data());
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
+	bool draw_flow_field = false;
+	bool update_flow_field = false;
 
 	void generate_flowfield()
 	{
-		flowfield.clear();
+		flow_field.clear();
 		s32 cols = std::floor(w / scale);
 		s32 rows = std::floor(h / scale);
 		for (s32 y = 0; y < rows; y++)
 		{
 			for (s32 x = 0; x < cols; x++)
 			{
+				// Forces
 				f32 angle = noise.GetNoise(static_cast<f32>(x * noise_scale), static_cast<f32>(y * noise_scale), z) * TAU;
 				vf3 dir = { std::cosf(angle), std::sinf(angle), 0.0f };
-				//vf3 dir = curl(x, y, z);
 				//dir = glm::normalize(dir) * 0.10f;
-				flowfield.push_back(dir);
+				flow_field.push_back(dir);
 
-				vf3 pos = { static_cast<f32>(x * scale), static_cast<f32>(y * scale) , 0.0f };
-				vf3 end = pos + dir * length;
-
-				vector_lines.push_back(std::make_unique<line>(pos, end));
+				// Lines
+				vf3 start = { static_cast<f32>(x * scale), static_cast<f32>(y * scale) , 0.0f };
+				vf3 end = start + dir * length;
+				vector_lines.push_back(std::make_unique<line>(start, end));
 			}
 		}
 
@@ -103,8 +119,8 @@ public:
 			Particle p;
 			//f32 x = rng.uniform(0.0f, w);
 			//f32 y = rng.uniform(0.0f, h);
-			f32 x = rng.normal(w /2, w / 8);
-			f32 y = rng.normal(h /2, h / 8);
+			f32 x = rng.normal(w /2, w / 16);
+			f32 y = rng.normal(h /2, h / 16);
 
 			p.pos = { x, y };
 			p.vel = { 0.0f, 0.0f };
@@ -113,21 +129,6 @@ public:
 			particles.push_back(p);
 		}
 	}
-
-	// finite difference
-	vf3 curl(f32 x, f32 y, f32 z, f32 eps = 0.001f) 
-	{
-		f32 n_y0 = noise.GetNoise(x, y + eps, z);
-		f32 n_y1 = noise.GetNoise(x, y - eps, z);
-		f32 n_x0 = noise.GetNoise(x + eps, y, z);
-		f32 n_x1 = noise.GetNoise(x - eps, y, z);
-
-		f32 dfdx = (n_x0 - n_x1) / (2 * eps);
-		f32 dfdy = (n_y0 - n_y1) / (2 * eps);
-
-		return vf3{ dfdy, -dfdx, 0.0f };
-	}
-
 
 public:
 	void Create() override
@@ -150,6 +151,9 @@ public:
 
 		w = m_window.Width();
 		h = m_window.Height();
+
+		cols = std::floor(w / scale);
+		rows = std::floor(h / scale);
 
 		proj = glm::ortho(0.0f, f32(w), 0.0f, f32(h), 0.1f, -1.0f);
 
@@ -182,12 +186,11 @@ public:
 
 	void ProcessInput() override
 	{
-		update = false;
 		if(m_input.IsKeyPressed(GLFW_KEY_SPACE))
-			update = true;
+			update_flow_field = !update_flow_field;
 
 		if (m_input.IsKeyPressed(GLFW_KEY_E))
-			clear = !clear;
+			clear_screen = !clear_screen;
 
 		if (m_input.IsKeyPressed(GLFW_KEY_TAB))
 			m_gui.show_gui = !m_gui.show_gui;
@@ -199,63 +202,60 @@ public:
 		}
 
 		if (m_input.IsKeyPressed(GLFW_KEY_Q))
-			draw_lines = !draw_lines;
+			draw_flow_field = !draw_flow_field;
 
 		if (m_input.IsKeyPressed(GLFW_KEY_W))
 			draw_particles = !draw_particles;
-
 	}
 
 	void Simulate(f32 dt) override
 	{
 		noise.SetFrequency(noise_frequency);
+		noise.SetFractalOctaves(noise_octaves);
+		noise.SetFractalLacunarity(noise_lacunarity);
+		noise.SetFractalGain(noise_gain);
 
-		if (update)
+		if (update_flow_field)
 		{
 			// Update Flow Field
 			s32 idx = 0;
-			flowfield.clear();
-			s32 cols = std::floor(w / scale);
-			s32 rows = std::floor(h / scale);
+			flow_field.clear();
 			for (s32 y = 0; y < rows; y++)
 			{
 				for (s32 x = 0; x < cols; x++)
 				{
+					// Update force vector
 					f32 angle = noise.GetNoise(static_cast<f32>(x * noise_scale), static_cast<f32>(y * noise_scale), z) * TAU;
 					vf3 dir = { std::cosf(angle), std::sinf(angle), 0.0f };
-					//vf3 dir = curl(x, y, z);
 					//dir = glm::normalize(dir) * 0.1f;
-					flowfield.push_back(dir);
+					flow_field.push_back(dir);
 					
-					vf3 pos = { static_cast<f32>(x * scale), static_cast<f32>(y * scale), 0.0f };
-					vf3 end = pos + dir * length;
-					update_line(vector_lines[idx].get(), pos, end);
+					// Update line vertex
+					vf3 start = { static_cast<f32>(x * scale), static_cast<f32>(y * scale), 0.0f };
+					vf3 end = start + dir * length;
+					vector_lines[idx]->update(start, end);
+
 					idx++;
 				}
 			}
-			z += dt * 100.0f;
+			z += dt;
 		}
+
 
 		if (draw_particles)
 		{
 			// Update Particles
 			for (auto& p : particles)
 			{
-				s32 cols = std::floor(w / scale);
-				s32 rows = std::floor(h / scale);
+				s32 x = s32(p.pos.x / scale);
+				s32 y = s32(p.pos.y / scale);
 
-				s32 gx = s32(p.pos.x / scale);
-				s32 gy = s32(p.pos.y / scale);
-
-				gx = std::clamp(gx, 0, cols - 1);
-				gy = std::clamp(gy, 0, rows - 1);
-
-				s32 idx = gy * cols + gx;
-
-				p.acc = flowfield[idx];
+				x = std::clamp(x, 0, cols - 1);
+				y = std::clamp(y, 0, rows - 1);
+				
+				p.acc = flow_field[y * cols + x];
 				p.vel += p.acc;
 
-				// Clamp velocity
 				if (glm::length(p.vel) > max_speed)
 					p.vel = glm::normalize(p.vel) * max_speed;
 
@@ -276,7 +276,7 @@ public:
 
 	void Render() override
 	{
-		if (clear) 
+		if (clear_screen) 
 		{
 			glm::vec4 v = to_float({ 0,0,0,0 });
 			glClearColor(v.r, v.g, v.b, v.a);
@@ -287,7 +287,7 @@ public:
 			glClear(GL_DEPTH_BUFFER_BIT);
 		}
 
-		if (draw_lines)
+		if (draw_flow_field)
 		{
 			shader->Use();
 			shader->SetUniform("projection", proj);
@@ -309,13 +309,17 @@ public:
 
 		m_gui.m_func = [&]() {
 			ImGui::Begin("Flow Field Parameters");
-			ImGui::SliderFloat("Noise Scale",        &noise_scale, 0.01f, 2.0f); // larger the value, erratic the flow
+			ImGui::SliderFloat("Noise Scale",        &noise_scale,       0.01f, 2.0f); // larger the value, erratic the flow
 			ImGui::SliderFloat("Frequency",          &noise_frequency,   0.0f, 2.0f); // larger the value, erratic the flow
 			ImGui::SliderInt("Octaves",              &noise_octaves,     1, 20);
 			ImGui::SliderFloat("Lacunarity",         &noise_lacunarity,  0.0f, 4.0f);
 			ImGui::SliderFloat("Gain",               &noise_gain,        0.0f, 1.0f);
 			ImGui::SliderFloat("Particle Size",      &particle_size,     0.01f, 20.0f);
 			ImGui::SliderFloat("Particle Max Speed", &max_speed,         0.00f, 200.0f);
+			ImGui::Checkbox("Update Flow Field",     &update_flow_field);
+			ImGui::Checkbox("Clear Screen",          &clear_screen);
+			ImGui::Checkbox("Draw Flow Field",       &draw_flow_field);
+			ImGui::Checkbox("Draw Particles",        &draw_particles);
 			ImGui::End();
 		};
 	}

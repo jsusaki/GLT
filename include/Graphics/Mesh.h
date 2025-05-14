@@ -159,19 +159,6 @@ struct Mesh
 	}
 };
 
-struct line : public Mesh
-{
-	line(vf3 a, vf3 b, vf4 color = { 1.0f, 1.0f, 1.0f, 1.0f })
-	{
-		vertices = {
-			{ a, { 0.0f,0.0f,1.0f }, color, { 0.0f, 0.0f } },
-			{ b, { 0.0f,0.0f,1.0f }, color, { 0.0f, 0.0f } },
-		};
-		indices = { 0, 1 };
-		setup_buffers();
-	}
-};
-
 struct triangle : public Mesh
 {
 	triangle()

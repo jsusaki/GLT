@@ -1,7 +1,6 @@
 #include "Application.h"
 
-#include "Graphics/Texture.h"
-#include "Graphics/Quad.h"
+#include "Graphics/Sprite.h"
 #include "Graphics/Shader.h"
 #include "Graphics/PostProcessor.h"
 
@@ -9,12 +8,10 @@ class CRT : public Application
 {
 public:
 	CRT() {}
-
-	Quad* quad = nullptr;
-	Texture* tex = nullptr;
-	Shader* shader = nullptr;
-	Shader* basic = nullptr;
-	PostProcessor* post_processor = nullptr;
+	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Shader> crt_shader;
+	std::unique_ptr<Shader> texture_shader;
+	std::unique_ptr<PostProcessor> post_processor;
 
 	struct SimpleCRTConfig
 	{
@@ -45,20 +42,10 @@ public:
 public:
 	void Create() override
 	{
-		tex = new Texture("res/images/wizardRL.png");
-		quad = new Quad();
-
-		basic = new Shader(
-			"res/shaders/basic/basic.vs",
-			"res/shaders/basic/basic.fs"
-		);
-
-		shader = new Shader(
-			"res/shaders/post_processing/post_processing.vs", 
-			"res/shaders/post_processing/simple_crt.fs"
-		);
-
-		post_processor = new PostProcessor(m_window.Width(), m_window.Height());
+		sprite = std::make_unique<Sprite>("res/images/wizardRL.png");
+		texture_shader = std::make_unique<Shader>("res/shaders/basic/texture.vs", "res/shaders/basic/texture.fs");
+		crt_shader = std::make_unique<Shader>("res/shaders/post_processing/post_processing.vs", "res/shaders/post_processing/simple_crt.fs");
+		post_processor = std::make_unique<PostProcessor>(m_window.Width(), m_window.Height());
 	}
 
 	void ProcessInput() override
@@ -73,40 +60,41 @@ public:
 
 	void Render() override
 	{
+		m_window.Clear();
+
 		post_processor->Begin();
 
-		basic->Use();
-		basic->SetUniform("screen_texture", 0);
+		texture_shader->Use();
+		texture_shader->SetUniform("screen_texture", 0);
 
 		// Draw Texture
-		tex->Bind();
-		quad->Draw();
+		sprite->Draw();
 
 		// Post Processing
-		shader->Use();
-		shader->SetUniform("screen_texture", 0);
+		crt_shader->Use();
+		crt_shader->SetUniform("screen_texture", 0);
 
 		// Shader Uniforms
-		shader->SetUniform("screen_resolution",     { m_window.Width(), m_window.Height() });
-		shader->SetUniform("scanline_amplitude",    config.scanline_amplitude);
-		shader->SetUniform("scanline_frequency",    config.scanline_frequency);
-		shader->SetUniform("scanline_offset",       config.scanline_offset);
-		shader->SetUniform("primary_curvature",     config.primary_curvature);
-		shader->SetUniform("secondary_curvature",   config.secondary_curvature);
-		shader->SetUniform("vignette_radius",       config.vignette_radius);
-		shader->SetUniform("vignette_softness",     config.vignette_softness);
-		shader->SetUniform("blur_radius",           config.blur_radius);
-		shader->SetUniform("blend_factor",          config.blend_factor);
-		shader->SetUniform("gamma",                 config.gamma);
-		shader->SetUniform("contrast",              config.contrast);
-		shader->SetUniform("saturation",            config.saturation);
-		shader->SetUniform("brightness",            config.brightness);
-		shader->SetUniform("color_correction",      config.color_correction);
-		shader->SetUniform("phosphor_dot_scale",    config.phosphor_dot_scale);
-		shader->SetUniform("phosphor_dot_softness", config.phosphor_dot_softness);
-		shader->SetUniform("bloom_intensity",       config.bloom_intensity);
-		shader->SetUniform("bloom_threshold",       config.bloom_threshold);
-		shader->SetUniform("bloom_blend_factor",    config.bloom_blend_factor);
+		crt_shader->SetUniform("screen_resolution",     { m_window.Width(), m_window.Height() });
+		crt_shader->SetUniform("scanline_amplitude",    config.scanline_amplitude);
+		crt_shader->SetUniform("scanline_frequency",    config.scanline_frequency);
+		crt_shader->SetUniform("scanline_offset",       config.scanline_offset);
+		crt_shader->SetUniform("primary_curvature",     config.primary_curvature);
+		crt_shader->SetUniform("secondary_curvature",   config.secondary_curvature);
+		crt_shader->SetUniform("vignette_radius",       config.vignette_radius);
+		crt_shader->SetUniform("vignette_softness",     config.vignette_softness);
+		crt_shader->SetUniform("blur_radius",           config.blur_radius);
+		crt_shader->SetUniform("blend_factor",          config.blend_factor);
+		crt_shader->SetUniform("gamma",                 config.gamma);
+		crt_shader->SetUniform("contrast",              config.contrast);
+		crt_shader->SetUniform("saturation",            config.saturation);
+		crt_shader->SetUniform("brightness",            config.brightness);
+		crt_shader->SetUniform("color_correction",      config.color_correction);
+		crt_shader->SetUniform("phosphor_dot_scale",    config.phosphor_dot_scale);
+		crt_shader->SetUniform("phosphor_dot_softness", config.phosphor_dot_softness);
+		crt_shader->SetUniform("bloom_intensity",       config.bloom_intensity);
+		crt_shader->SetUniform("bloom_threshold",       config.bloom_threshold);
+		crt_shader->SetUniform("bloom_blend_factor",    config.bloom_blend_factor);
 
 		post_processor->End();
 		post_processor->Render();

@@ -3,19 +3,21 @@
 #include <glad/glad.h>
 #include <vector>
 
-struct vertex
-{
-    vf3 p;
-    vf3 c;
-    vf2 uv;
-};
+#include "Core/Common.h"
 
-struct Quad
+struct TextureQuad
 {
-    Quad()
+    struct vertex
+    {
+        vf3 p;
+        vf3 c;
+        vf2 uv;
+    };
+
+    TextureQuad()
     {
         vertices = {
-            // positions             // colors              // tex coords
+            // positions             // colors              // texcoords
             {{ 1.0f, -1.0f, 0.0f },  { 1.0f, 0.0f, 0.0f },  { 1.0f, 0.0f }}, // bottom right
             {{-1.0f, -1.0f, 0.0f },  { 0.0f, 1.0f, 0.0f },  { 0.0f, 0.0f }}, // bottom left
             {{ 1.0f,  1.0f, 0.0f },  { 0.0f, 0.0f, 1.0f },  { 1.0f, 1.0f }}, // top right
@@ -58,7 +60,7 @@ struct Quad
         glBindVertexArray(0);
     }
 
-    ~Quad()
+    ~TextureQuad()
     {
         glDeleteVertexArrays(1, &vao);
         glDeleteBuffers(1, &vbo);

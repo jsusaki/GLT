@@ -23,7 +23,7 @@ public:
     void SetShouldClose();
     void Close();
     void SwapBuffers();
-    void Clear(const Color& c);
+    void Clear(const Color& c = { 0, 0, 0, 0 });
 
     GLFWwindow* GetWindow();
     Input* GetInput();

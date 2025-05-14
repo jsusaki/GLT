@@ -50,8 +50,8 @@ void Texture::Create(int width, int height, const unsigned char* data, int chann
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filtered ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filtered ? GL_LINEAR : GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     clamped ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     clamped ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,     clamped  ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,     clamped  ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 
     if (mipmap) glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -71,5 +71,5 @@ void Texture::Unbind() const
 
 GLuint Texture::GetID() const { return m_id; }
 const std::string& Texture::GetPath() const { return m_path; }
-int Texture::GetWidth() const { return m_width; }
-int Texture::GetHeight() const { return m_height; }
+s32 Texture::GetWidth() const { return m_width; }
+s32 Texture::GetHeight() const { return m_height; }
