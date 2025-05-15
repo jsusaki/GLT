@@ -14,8 +14,6 @@ public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> texture_shader;
 
-	Random rng;
-
 	FastNoiseLite noise;
 	s32 noise_type = 0;
 	s32 noise_seed = 1337;
@@ -63,8 +61,11 @@ public:
 
 	void Create() override
 	{
+		// Create empty texture
 		sprite = std::make_unique<Sprite>(m_window.Width(), m_window.Height());
 		texture_shader = std::make_unique<Shader>("res/shaders/basic/texture.vs", "res/shaders/basic/texture.fs");
+		
+		// Sample noise and fill texture buffer
 		SampleNoise();
 	}
 
