@@ -4,7 +4,10 @@
 
 #include "stb_image.h"
 
-Texture::Texture() {}
+Texture::Texture(s32 width, s32 height, s32 channels, bool filtered, bool clamped, bool mipmap)
+{
+    Create(width, height, nullptr, channels, filtered, clamped, mipmap);
+}
 
 Texture::Texture(const std::string& filepath, bool flip_vertically, bool filtered, bool clamped)
 {

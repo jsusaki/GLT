@@ -10,7 +10,7 @@
 class Texture
 {
 public:
-	Texture();
+	Texture(s32 width, s32 height, s32 channels = 4, bool filtered = false, bool clamped = true, bool mipmap = false);
 	Texture(const std::string& filepath, bool flip_vertically = true, bool filtered = true, bool clamped = false);
 	~Texture();
 
