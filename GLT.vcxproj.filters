@@ -78,7 +78,7 @@
     <ClCompile Include="examples\Ayre\ayre.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\pixels\pixels.cpp">
+    <ClCompile Include="examples\fluid_simulation\fluid_simulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1035,6 +1035,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Graphics\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="examples\fluid_simulation\fluid_simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

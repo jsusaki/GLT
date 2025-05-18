@@ -179,7 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="examples\Ayre\ayre.cpp" />
-    <ClCompile Include="examples\pixels\pixels.cpp" />
+    <ClCompile Include="examples\fluid_simulation\fluid_simulation.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -202,6 +202,7 @@
     <ClCompile Include="include\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="examples\fluid_simulation\fluid_simulation.h" />
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Graphics\Camera.h" />
     <ClInclude Include="include\Graphics\Color.h" />
