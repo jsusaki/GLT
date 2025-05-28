@@ -1,19 +1,13 @@
 /*
-	Eulerian Fluid Simulation
-		Navier-Stokes Equation
-			
+	Fluid Simulation
 
 	References:
-		How to write an Eulerian fluid simulator with 200 lines of code
-		https://www.youtube.com/watch?v=iKAVRgIrUOU&ab_channel=TenMinutePhysics
-		https://matthias-research.github.io/pages/tenMinutePhysics/17-fluidSim.pdf
-		https://github.com/matthias-research/pages/blob/master/tenMinutePhysics/17-fluidSim.html
-		https://matthias-research.github.io/pages/tenMinutePhysics/17-fluidSim.html
-
 		https://www.dgp.toronto.edu/public_user/stam/reality/Research/pdf/GDC03.pdf
 		https://mikeash.com/pyblog/fluid-simulation-for-dummies.html
-*/
 
+		How to write an Eulerian fluid simulator with 200 lines of code
+		https://www.youtube.com/watch?v=iKAVRgIrUOU&ab_channel=TenMinutePhysics
+*/
 
 #include "Application.h"
 
@@ -41,9 +35,7 @@ public:
 	FastNoiseLite noise;
 	vf2 position = { 400.0f / scale, 400.0f / scale };
 	f32 noise_scale = 0.1f;
-	f32 speed = 0.001f;
-	f32 time = 0.0f;
-	f32 time_scale = 0.001f;
+	f32 speed = 30.0f;
 	bool update = true;
 
 public:
@@ -52,7 +44,7 @@ public:
 		sprite = std::make_unique<Sprite>(m_window.Width(), m_window.Height());
 		texture_shader = std::make_unique<Shader>("res/shaders/basic/texture.vs", "res/shaders/basic/texture.fs");
 
-		fluid = new FluidModel(N, 0.2f, 0.0f, 1.0f);
+		fluid = new FluidModel(N, 0.2f, 0.0f, 0.0f);
 
 		noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 		noise.SetSeed(1337);
@@ -73,11 +65,10 @@ public:
 		// Reset
 		if (m_input.IsKeyPressed(GLFW_KEY_R))
 		{
-			for (s32 i = 0; i < N*N; i++)
+			for (s32 i = 0; i < fluid->density.size(); i++)
 				fluid->density[i] = 0.0f;
 		}
 
-		/*
 		f32 angle = noise.GetNoise(position.x / scale * noise_scale, position.y / scale * noise_scale) * TAU;
 		vf2 direction = { std::cosf(angle), std::sinf(angle) };
 		vf2 velocity = glm::normalize(direction) * speed;
@@ -91,9 +82,6 @@ public:
 
 		fluid->AddDensity(fluid_cube, static_cast<s32>(position.x), static_cast<s32>(position.y), rng.uniformi(100, 150));
 		fluid->AddVelocity(fluid_cube, static_cast<s32>(position.x), static_cast<s32>(position.y), velocity.x, velocity.y);
-
-		time += time_scale;
-		*/
 	}
 
 	void Simulate(f32 dt) override
@@ -114,16 +102,19 @@ public:
 			/*
 			s32 cx = s32((0.5f * m_window.Width()) / scale);
 			s32 cy = s32((0.10f * m_window.Height()) / scale);
-			for (s32 i = -1; i <= 1; i++) {
-				for (s32 j = -1; j <= 1; j++) {
+			for (s32 i = -1; i <= 1; i++) 
+			{
+				for (s32 j = -1; j <= 1; j++) 
+				{
 					fluid->AddDensity(fluid_cube, cx + i, cy + j, rng.uniformi(50, 150));
 				}
 			}
 			fluid->AddVelocity(fluid_cube, cx, cy, 0.0f, 0.0005f);
 			*/
 
-			fluid->Step();
+			fluid->Simulate(dt*speed);
 
+			// Update Pixel Buffer
 			for (s32 x = 0; x < N; x++)
 			{
 				for (s32 y = 0; y < N; y++)

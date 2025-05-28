@@ -18,6 +18,7 @@ public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> texture_shader;
 	Random rng;
+	s32 scale = 4;
 
 	void Create() override
 	{
@@ -40,7 +41,14 @@ public:
 				u8 r = rng.uniformi(0, 255);
 				u8 g = rng.uniformi(0, 255);
 				u8 b = rng.uniformi(0, 255);
-				sprite->SetPixel(x, y, r, g, b);
+
+				for (s32 dx = 0; dx < scale; dx++)
+				{
+					for (s32 dy = 0; dy < scale; dy++)
+					{
+						sprite->SetPixel(sx + dx, sy + dy, r, g, b);
+					}
+				}
 			}
 		}
 

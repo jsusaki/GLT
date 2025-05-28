@@ -179,7 +179,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="examples\Ayre\ayre.cpp" />
-    <ClCompile Include="examples\fluid_simulation\fluid_simulation.cpp" />
+    <ClCompile Include="examples\fractal\fractal.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -202,7 +202,6 @@
     <ClCompile Include="include\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="examples\fluid_simulation\fluid_simulation.h" />
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Graphics\Camera.h" />
     <ClInclude Include="include\Graphics\Color.h" />
@@ -664,6 +663,8 @@
     <None Include="lib\glm\gtx\wrap.inl" />
     <None Include="res\shaders\basic\circle.fs" />
     <None Include="res\shaders\basic\circle.vs" />
+    <None Include="res\shaders\basic\fractal.fs" />
+    <None Include="res\shaders\basic\fractal.vs" />
     <None Include="res\shaders\basic\texture.fs" />
     <None Include="res\shaders\basic\default.vs" />
     <None Include="res\shaders\basic\default.fs" />

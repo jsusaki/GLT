@@ -23,31 +23,28 @@ static void advect(s32 b, std::vector<f32>& d, std::vector<f32>& d0, std::vector
 struct FluidModel
 {
 	s32 size;
-	f32 dt;
 	f32 diff;
 	f32 visc;
 	std::vector<f32> s;
 	std::vector<f32> density;
 
-	std::vector<f32> Vx;
-	std::vector<f32> Vy;
-	std::vector<f32> Vx0;
-	std::vector<f32> Vy0;
+	std::vector<f32> vx;
+	std::vector<f32> vy;
+	std::vector<f32> vx0;
+	std::vector<f32> vy0;
 
-	FluidModel(s32 sz, s32 diffusion, s32 viscosity, s32 deltatime)
+	FluidModel(s32 sz, s32 diffusion, s32 viscosity)
 	{
 		size = sz;
-		dt = deltatime;
 		diff = diffusion;
 		visc = viscosity;
 
 		s.resize(size * size);
 		density.resize(size * size);
-
-		Vx.resize(size * size);
-		Vy.resize(size * size);
-		Vx0.resize(size * size);
-		Vy0.resize(size * size);
+		vx.resize(size * size);
+		vy.resize(size * size);
+		vx0.resize(size * size);
+		vy0.resize(size * size);
 	}
 
 	void AddDensity(s32 x, s32 y, f32 amount)
@@ -57,47 +54,46 @@ struct FluidModel
 
 	void AddVelocity(s32 x, s32 y, f32 amountX, f32 amountY)
 	{
-		s32 index = idx(x, y);
-		Vx[index] += amountX;
-		Vy[index] += amountY;
+		vx[idx(x, y)] += amountX;
+		vy[idx(x, y)] += amountY;
 	}
 
-	void Step()
+	void Simulate(f32 dt)
 	{
-		diffuse(1, Vx0, Vx, visc, dt, 4, N);
-		diffuse(2, Vy0, Vy, visc, dt, 4, N);
+		diffuse(1, vx0, vx, visc, dt, 4, N);
+		diffuse(2, vy0, vy, visc, dt, 4, N);
 
-		project(Vx0, Vy0, Vx, Vy, 4, N);
+		project(vx0, vy0, vx, vy, 4, N);
 
-		advect(1, Vx, Vx0, Vx0, Vy0, dt, N);
-		advect(2, Vy, Vy0, Vx0, Vy0, dt, N);
+		advect(1, vx, vx0, vx0, vy0, dt, N);
+		advect(2, vy, vy0, vx0, vy0, dt, N);
 
-		project(Vx, Vy, Vx0, Vy0, 4, N);
+		project(vx, vy, vx0, vy0, 4, N);
 
 		diffuse(0, s, density, diff, dt, 4, N);
-		advect(0, density, s, Vx, Vy, dt, N);
+		advect(0, density, s, vx, vy, dt, N);
 	}
 };
-
 
 // Boundary Condition
 static void set_bnd(s32 b, std::vector<f32>& x, s32 N)
 {
 	for (s32 i = 1; i < N - 1; i++)
 	{
-		x[idx(i, 0)] = b == 2 ? -x[idx(i, 1)] : x[idx(i, 1)];
+		x[idx(i, 0)]     = b == 2 ? -x[idx(i, 1)] : x[idx(i, 1)];
 		x[idx(i, N - 1)] = b == 2 ? -x[idx(i, N - 2)] : x[idx(i, N - 2)];
 	}
+
 	for (s32 j = 1; j < N - 1; j++)
 	{
-		x[idx(0, j)] = b == 1 ? -x[idx(1, j)] : x[idx(1, j)];
+		x[idx(0, j)]     = b == 1 ? -x[idx(1, j)] : x[idx(1, j)];
 		x[idx(N - 1, j)] = b == 1 ? -x[idx(N - 2, j)] : x[idx(N - 2, j)];
 	}
 
-	x[idx(0, 0)] = 0.5 * (x[idx(1, 0)] + x[idx(0, 1)]);
-	x[idx(0, N - 1)] = 0.5 * (x[idx(1, N - 1)] + x[idx(0, N - 2)]);
-	x[idx(N - 1, 0)] = 0.5 * (x[idx(N - 2, 0)] + x[idx(N - 1, 1)]);
-	x[idx(N - 1, N - 1)] = 0.5 * (x[idx(N - 2, N - 1)] + x[idx(N - 1, N - 2)]);
+	x[idx(0, 0)]         = 0.5f * (x[idx(1, 0)]         + x[idx(0, 1)]);
+	x[idx(0, N - 1)]     = 0.5f * (x[idx(1, N - 1)]     + x[idx(0, N - 2)]);
+	x[idx(N - 1, 0)]     = 0.5f * (x[idx(N - 2, 0)]     + x[idx(N - 1, 1)]);
+	x[idx(N - 1, N - 1)] = 0.5f * (x[idx(N - 2, N - 1)] + x[idx(N - 1, N - 2)]);
 }
 
 // Linear Equation Solver
@@ -113,42 +109,49 @@ static void lin_solve(s32 b, std::vector<f32>& x, std::vector<f32>& x0, f32 a, f
 				x[idx(i, j)] = (x0[idx(i, j)] + a * (x[idx(i + 1, j)] + x[idx(i - 1, j)] + x[idx(i, j + 1)] + x[idx(i, j - 1)])) * cRecip;
 			}
 		}
+
 		set_bnd(b, x, N);
 	}
 }
 
 // Diffusion Equation
-static void diffuse(s32 b, std::vector<f32>& x, std::vector<f32>& x0, f32 diff, f32 dt, s32 iter, s32 N)
+static void diffuse(s32 b, std::vector<f32>& vx, std::vector<f32>& vx0, f32 diff, f32 dt, s32 iter, s32 N)
 {
 	f32 a = dt * diff * (N - 2) * (N - 2);
-	lin_solve(b, x, x0, a, 1 + 6 * a, iter, N);
+	lin_solve(b, vx, vx0, a, 1 + 6 * a, iter, N);
 }
 
 // Projection Equation
-static void project(std::vector<f32>& velocX, std::vector<f32>& velocY, std::vector<f32>& p, std::vector<f32>& div, s32 iter, s32 N)
+static void project(std::vector<f32>& vx, std::vector<f32>& vy, std::vector<f32>& p, std::vector<f32>& div, s32 iter, s32 N)
 {
-	for (s32 j = 1; j < N - 1; j++) {
-		for (s32 i = 1; i < N - 1; i++) {
-			div[idx(i, j)] = (-0.5f * (velocX[idx(i + 1, j)] - velocX[idx(i - 1, j)] + velocY[idx(i, j + 1)] - velocY[idx(i, j - 1)])) / N;
+	for (s32 j = 1; j < N - 1; j++) 
+	{
+		for (s32 i = 1; i < N - 1; i++) 
+		{
+			div[idx(i, j)] = (-0.5f * (vx[idx(i + 1, j)] - vx[idx(i - 1, j)] + vy[idx(i, j + 1)] - vy[idx(i, j - 1)])) / N;
 			p[idx(i, j)] = 0;
 		}
 	}
+
 	set_bnd(0, div, N);
 	set_bnd(0, p, N);
 	lin_solve(0, p, div, 1, 6, iter, N);
 
-	for (s32 j = 1; j < N - 1; j++) {
-		for (s32 i = 1; i < N - 1; i++) {
-			velocX[idx(i, j)] -= 0.5f * (p[idx(i + 1, j)] - p[idx(i - 1, j)]) * N;
-			velocY[idx(i, j)] -= 0.5f * (p[idx(i, j + 1)] - p[idx(i, j - 1)]) * N;
+	for (s32 j = 1; j < N - 1; j++) 
+	{
+		for (s32 i = 1; i < N - 1; i++) 
+		{
+			vx[idx(i, j)] -= 0.5f * (p[idx(i + 1, j)] - p[idx(i - 1, j)]) * N;
+			vy[idx(i, j)] -= 0.5f * (p[idx(i, j + 1)] - p[idx(i, j - 1)]) * N;
 		}
 	}
-	set_bnd(1, velocX, N);
-	set_bnd(2, velocY, N);
+
+	set_bnd(1, vx, N);
+	set_bnd(2, vy, N);
 }
 
 // Advection Equation
-static void advect(s32 b, std::vector<f32>& d, std::vector<f32>& d0, std::vector<f32>& velocX, std::vector<f32>& velocY, f32 dt, s32 N)
+static void advect(s32 b, std::vector<f32>& d, std::vector<f32>& d0, std::vector<f32>& vx, std::vector<f32>& vy, f32 dt, s32 N)
 {
 	f32 i0, i1, j0, j1;
 
@@ -162,10 +165,12 @@ static void advect(s32 b, std::vector<f32>& d, std::vector<f32>& d0, std::vector
 	f32 ifloat, jfloat;
 	s32 i, j;
 
-	for (j = 1, jfloat = 1; j < N - 1; j++, jfloat++) {
-		for (i = 1, ifloat = 1; i < N - 1; i++, ifloat++) {
-			tmp1 = dtx * velocX[idx(i, j)];
-			tmp2 = dty * velocY[idx(i, j)];
+	for (j = 1, jfloat = 1; j < N - 1; j++, jfloat++) 
+	{
+		for (i = 1, ifloat = 1; i < N - 1; i++, ifloat++) 
+		{
+			tmp1 = dtx * vx[idx(i, j)];
+			tmp2 = dty * vy[idx(i, j)];
 			x = ifloat - tmp1;
 			y = jfloat - tmp2;
 
@@ -191,6 +196,7 @@ static void advect(s32 b, std::vector<f32>& d, std::vector<f32>& d0, std::vector
 			d[idx(i, j)] = s0 * (t0 * d0[idx(i0i, j0i)] + t1 * d0[idx(i0i, j1i)]) + s1 * (t0 * d0[idx(i1i, j0i)] + t1 * d0[idx(i1i, j1i)]);
 		}
 	}
+
 	set_bnd(b, d, N);
 }
 
@@ -230,11 +236,11 @@ static std::vector<Color> viridis = {
 	{ 239, 229, 28 }, { 244, 230, 30 }, { 248, 230, 33 }, { 253, 231, 37 }
 };
 
-static Color GetColor(f32 val, f32 minVal, f32 maxVal)
+static Color GetColor(f32 val, f32 min, f32 max)
 {
-	f32 v = std::min(std::max(val, minVal), maxVal);
-	f32 d = maxVal - minVal;
-	f32 normalized = (d == 0.0f) ? 0.5f : (v - minVal) / d;
+	f32 v = std::min(std::max(val, min), max);
+	f32 d = max - min;
+	f32 normalized = (d == 0.0f) ? 0.5f : (v - min) / d;
 	s32 index = static_cast<s32>(normalized * 127);
 	return viridis[index];
 }
