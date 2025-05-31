@@ -20,19 +20,25 @@ public:
 
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> fractal_shader;
+	bool show_julia = true;
+
+	vf2 c = { -0.7269f, 0.1889f };
+	//vf2 c = {-0.943072290, 0.258960843};
+	//vf2 c = {-0.772466100, 0.103424500};
+	//vf2 c = {-0.743510000, 0.127090000};
+	//vf2 c = {-0.79, 0.15};
 
 	f32 zoom = 0.9f;
 	s32 max_iter = 85;
-	f32 max_zoom = 100000.0f;
-	vf2 c = { -0.7269f, 0.1889f };
-	//c = {-0.943072290, 0.258960843};
-	//c = {-0.772466100, 0.103424500};
-	//c = {-0.743510000, 0.127090000};
-	//c = {-0.79, 0.15};
-	f32 angle = 0.0f;
-	bool show_julia = true;
+
+	f32 pan_sensitivity = 0.003f;
+	f32 zoom_sensitivity = 0.1f;
+	vf2 center_offset = { 0.0f, 0.0f };
+	vf2 screen_size;
+
 	bool animate_julia = false;
-	f32 animation_speed = 0.12f;
+	f32 animation_speed = 0.1f;
+	f32 angle = 0.0f;
 	f32 timer = 0.0f;
 	f32 interval = 10.0f;
 
@@ -40,41 +46,70 @@ public:
 	{
 		sprite         = std::make_unique<Sprite>(m_window.Width(), m_window.Height());
 		fractal_shader = std::make_unique<Shader>("res/shaders/basic/fractal.vs", "res/shaders/basic/fractal.fs");
+		screen_size    = { m_window.Width(), m_window.Height() };
 	}
 
 	void ProcessInput() override
 	{
-		// Reset
-		if (m_input.IsKeyPressed(GLFW_KEY_SPACE))
-			zoom = 0.9f;
-		
-		// Animate
+		// Show GUI
 		if (m_input.IsKeyPressed(GLFW_KEY_TAB))
+			m_gui.show_gui = !m_gui.show_gui;
+
+		// Reset
+		if (m_input.IsKeyPressed(GLFW_KEY_R))
+			zoom = 0.9f;
+
+		// Animate
+		if (m_input.IsKeyPressed(GLFW_KEY_SPACE))
 			animate_julia = !animate_julia;
 
-		// Mouse Zoom
-		// TODO: something is not working
+		// Pan
+		if (m_input.IsButtonPressed(1))
+		{
+			vf2 delta = m_input.GetMouseDelta();
+			center_offset.x -= delta.x * -pan_sensitivity * zoom;
+			center_offset.y += delta.y * -pan_sensitivity * zoom;
+		}
+
+		// Zoom
 		f32 wheel_delta = m_input.GetMouseWheel();
-		if (wheel_delta > 0.0f)
-			zoom += 0.01f;
-		else if (wheel_delta < 0.0f)
-			zoom -= 0.01f;
+		if (wheel_delta != 0.0f)
+		{
+			f32 aspect = screen_size.x / screen_size.y;
+			vf2 mouse_ndc = (m_input.GetMouse() / screen_size) * 2.0f - 1.0f;
+			mouse_ndc.x *= aspect;
+			mouse_ndc.y = -mouse_ndc.y;
 
-		zoom = glm::clamp(zoom, 0.0f, max_zoom);
+			vf2 before_zoom = mouse_ndc * zoom + center_offset;
 
-		// Mouse Pan
+			f32 zoom_factor = std::exp(-wheel_delta * zoom_sensitivity);
+			zoom = std::clamp(zoom * zoom_factor, 1e-6f, 1.0f);
+
+			vf2 after_zoom = mouse_ndc * zoom + center_offset;
+
+			center_offset += before_zoom - after_zoom;
+		}
 	}
 	
 	void Simulate(f32 dt) override
 	{
+		timer += dt;
 		if (animate_julia) 
 		{
+			// Ping Pong Animation
 			f32 t = fmodf(timer, interval * 2.0f) / interval;
 			f32 dir = t < 1.0f ? 1.0f : -1.0f;
+
+			// Update Angle
 			angle += dt * animation_speed * dir; 
 
-			c = { std::cos(angle) + std::sin(angle * 3.0f) * 0.5f, std::sin(angle) };
+			// Update C
+			c = {
+				std::cos(angle) + std::sin(angle * 3.0f) * 0.5f, 
+				std::sin(angle) 
+			};
 			c *= 0.75f;
+
 			//c = { std::cos(angle), std::sin(angle) };
 		}
 	}
@@ -84,22 +119,21 @@ public:
 		m_window.Clear();
 
 		fractal_shader->Use();
-		fractal_shader->SetUniform("screen_size", { m_window.Width(), m_window.Height() });
-		fractal_shader->SetUniform("zoom",      zoom);
-		fractal_shader->SetUniform("max_iter",   max_iter);
-		fractal_shader->SetUniform("mouse",      m_input.GetMouse());
-		fractal_shader->SetUniform("c",          c);
+		fractal_shader->SetUniform("screen_size", screen_size);
+		fractal_shader->SetUniform("zoom", zoom);
+		fractal_shader->SetUniform("max_iter", max_iter);
+		fractal_shader->SetUniform("c", c);
 		fractal_shader->SetUniform("show_julia", show_julia);
+		fractal_shader->SetUniform("center_offset", center_offset);
 
 		sprite->Draw();
 
-		m_gui.show_gui = false;
 		m_gui.m_func = [&]() {
 			ImGui::Begin("Fractal Parameters");
 
-			ImGui::DragFloat("Zoom",        &zoom,             0.01f, 0.1f, 100000.0f);
-			ImGui::DragInt("Max Iteration", &max_iter,         1, 1, 5000);
-			ImGui::DragFloat2("c",          glm::value_ptr(c), 0.001f, -1.0f, 1.0f);
+			ImGui::DragFloat("Zoom", &zoom, 0.01f, 1e-6f, 1.0f);
+			ImGui::DragInt("Max Iteration", &max_iter, 1, 1, 5000);
+			ImGui::DragFloat2("c", glm::value_ptr(c), 0.001f, -1.0f, 1.0f);
 
 			if (ImGui::Button(show_julia ? "Mandelbrot Set" : "Julia Set"))
 				show_julia = !show_julia;
