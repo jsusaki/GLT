@@ -5,6 +5,7 @@
 
 	https://paulbourke.net/fractals/juliaset/
 	https://www.karlsims.com/julia.html
+	https://acko.net/blog/how-to-fold-a-julia-fractal/
 */
 #include "Application.h"
 
@@ -18,10 +19,12 @@ class Fractal : public Application
 public:
 	Fractal() {}
 
+public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> fractal_shader;
 	bool show_julia = true;
 
+	// Beautiful julia constants
 	vf2 c = { -0.7269f, 0.1889f };
 	//vf2 c = {-0.943072290, 0.258960843};
 	//vf2 c = {-0.772466100, 0.103424500};
@@ -37,16 +40,17 @@ public:
 	vf2 screen_size;
 
 	bool animate_julia = false;
+	bool ping_pong = false;
 	f32 animation_speed = 0.1f;
 	f32 angle = 0.0f;
 	f32 timer = 0.0f;
-	f32 interval = 10.0f;
+	f32 ping_pong_interval = 5.0f;
 
 	void Create() override
 	{
-		sprite         = std::make_unique<Sprite>(m_window.Width(), m_window.Height());
-		fractal_shader = std::make_unique<Shader>("res/shaders/basic/fractal.vs", "res/shaders/basic/fractal.fs");
 		screen_size    = { m_window.Width(), m_window.Height() };
+		sprite         = std::make_unique<Sprite>(screen_size.x, screen_size.y);
+		fractal_shader = std::make_unique<Shader>("res/shaders/basic/fractal.vs", "res/shaders/basic/fractal.fs");
 	}
 
 	void ProcessInput() override
@@ -75,15 +79,16 @@ public:
 		f32 wheel_delta = m_input.GetMouseWheel();
 		if (wheel_delta != 0.0f)
 		{
-			f32 aspect = screen_size.x / screen_size.y;
-			vf2 mouse_ndc = (m_input.GetMouse() / screen_size) * 2.0f - 1.0f;
-			mouse_ndc.x *= aspect;
+			f32 aspect_ratio = screen_size.x / screen_size.y;
+			vf2 mouse_position = m_input.GetMouse();
+			vf2 mouse_ndc = (mouse_position / screen_size) * 2.0f - 1.0f;
+			mouse_ndc.x *= aspect_ratio;
 			mouse_ndc.y = -mouse_ndc.y;
 
 			vf2 before_zoom = mouse_ndc * zoom + center_offset;
 
 			f32 zoom_factor = std::exp(-wheel_delta * zoom_sensitivity);
-			zoom = std::clamp(zoom * zoom_factor, 1e-6f, 1.0f);
+			zoom = std::clamp(zoom * zoom_factor, 1e-6f, 1.5f);
 
 			vf2 after_zoom = mouse_ndc * zoom + center_offset;
 
@@ -94,11 +99,15 @@ public:
 	void Simulate(f32 dt) override
 	{
 		timer += dt;
+		f32 dir = 1.0f;
 		if (animate_julia) 
 		{
 			// Ping Pong Animation
-			f32 t = fmodf(timer, interval * 2.0f) / interval;
-			f32 dir = t < 1.0f ? 1.0f : -1.0f;
+			if (ping_pong)
+			{
+				f32 t = fmodf(timer, ping_pong_interval * 2.0f) / ping_pong_interval;
+				dir = t < 1.0f ? 1.0f : -1.0f;
+			}
 
 			// Update Angle
 			angle += dt * animation_speed * dir; 
@@ -141,6 +150,8 @@ public:
 			ImGui::BeginDisabled(!show_julia);
 			ImGui::Checkbox("Animate", &animate_julia);
 			ImGui::DragFloat("Animation Speed", &animation_speed, 0.01f, -2.0f, 2.0f);
+			ImGui::Checkbox("Ping Pong", &ping_pong);
+			ImGui::DragFloat("Ping Pong Interval", &ping_pong_interval, 0.01f, 0.0f, 10.0f);
 			ImGui::EndDisabled();
 
 			ImGui::End();

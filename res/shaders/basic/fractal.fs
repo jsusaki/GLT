@@ -38,18 +38,15 @@ vec3 magma(float t)
 
 float fractal(vec2 z, vec2 c, int max_iter)
 {
-    int iter;
-    for (iter = 0; iter < max_iter; iter++) 
+    int iter = 0;
+    while ((z.x * z.x + z.y * z.y) <= 32.0 && iter < max_iter)
     {
         float x = (z.x * z.x - z.y * z.y) + c.x;
         float y = (2.0 * z.x * z.y)       + c.y;
-
-        if ((x * x + y * y) > 32.0)
-            break;
-
         z = vec2(x, y);
+        iter++;
     }
-    
+
     // Lower color banding
     float smooth_iter = float(iter);
     if (iter < max_iter) 
@@ -58,28 +55,28 @@ float fractal(vec2 z, vec2 c, int max_iter)
         abs_z = max(abs_z, 1e-8);
         smooth_iter = float(iter) + 1.0 - log2(log2(sqrt(abs_z)));
     }
+
     float t = smooth_iter / float(max_iter);
 
-
     // Normal color banding
-    //float t = float(iter) / float(max_iter);
+    //float t = float(iter) / float(max_iter); 
 
     return t;
 }
 
-float julia(vec2 texcoords, float aspect, float zoom, vec2 c, vec2 center_offset, int max_iter)
+float julia(vec2 texcoords, float aspect_ratio, float zoom, vec2 c, vec2 center_offset, int max_iter)
 {
     vec2 z;
-    z.x = (texcoords.x - 0.5) * zoom * aspect * 2.0 + center_offset.x;
+    z.x = (texcoords.x - 0.5) * zoom * aspect_ratio * 2.0 + center_offset.x;
     z.y = (texcoords.y - 0.5) * zoom          * 2.0 + center_offset.y;         
 
     return fractal(z, c, max_iter);
 }
 
-float mandelbrot(vec2 texcoords, float aspect, float zoom, vec2 center_offset, int max_iter)
+float mandelbrot(vec2 texcoords, float aspect_ratio, float zoom, vec2 center_offset, int max_iter)
 {
     vec2 c, z;
-    c.x = (texcoords.x - 0.5) * zoom * aspect * 2.0 + center_offset.x - 0.5;
+    c.x = (texcoords.x - 0.5) * zoom * aspect_ratio * 2.0 + center_offset.x - 0.5;
     c.y = (texcoords.y - 0.5) * zoom          * 2.0 + center_offset.y;         
     z = vec2(0.0);
 
@@ -88,13 +85,13 @@ float mandelbrot(vec2 texcoords, float aspect, float zoom, vec2 center_offset, i
 
 void main()
 {
-    float aspect = screen_size.x / screen_size.y;
+    float aspect_ratio = screen_size.x / screen_size.y;
   
     float t;
     if (show_julia)    
-        t = julia(TexCoords, aspect, zoom, c, center_offset, max_iter);
+        t = julia(TexCoords, aspect_ratio, zoom, c, center_offset, max_iter);
     else
-        t = mandelbrot(TexCoords, aspect, zoom, center_offset, max_iter);
+        t = mandelbrot(TexCoords, aspect_ratio, zoom, center_offset, max_iter);
     
     //FragColor = vec4(vec3(t), 1.0);
     //FragColor = map_to_color(t, vec3(9.0, 15.0, 8.5));
