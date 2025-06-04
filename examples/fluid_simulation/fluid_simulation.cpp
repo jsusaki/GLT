@@ -24,6 +24,7 @@ class FluidSimulator : public Application
 public:
 	FluidSimulator() {}
 
+public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> texture_shader;
 	Random rng;

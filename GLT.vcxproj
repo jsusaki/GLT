@@ -178,8 +178,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\Ayre\ayre.cpp" />
-    <ClCompile Include="examples\fractal\fractal.cpp" />
+    <ClCompile Include="examples\star_system\star_system.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -207,6 +206,7 @@
     <ClInclude Include="include\Graphics\Color.h" />
     <ClInclude Include="include\Core\Input.h" />
     <ClInclude Include="include\Graphics\Mesh.h" />
+    <ClInclude Include="include\Graphics\Palette.h" />
     <ClInclude Include="include\Graphics\PostProcessor.h" />
     <ClInclude Include="include\Graphics\Sprite.h" />
     <ClInclude Include="include\Graphics\TextureQuad.h" />
@@ -661,10 +661,10 @@
     <None Include="lib\glm\gtx\vector_angle.inl" />
     <None Include="lib\glm\gtx\vector_query.inl" />
     <None Include="lib\glm\gtx\wrap.inl" />
-    <None Include="res\shaders\basic\circle.fs" />
-    <None Include="res\shaders\basic\circle.vs" />
-    <None Include="res\shaders\basic\fractal.fs" />
-    <None Include="res\shaders\basic\fractal.vs" />
+    <None Include="res\shaders\flow_field\circle.fs" />
+    <None Include="res\shaders\flow_field\circle.vs" />
+    <None Include="res\shaders\fractal\fractal.fs" />
+    <None Include="res\shaders\fractal\fractal.vs" />
     <None Include="res\shaders\basic\texture.fs" />
     <None Include="res\shaders\basic\default.vs" />
     <None Include="res\shaders\basic\default.fs" />

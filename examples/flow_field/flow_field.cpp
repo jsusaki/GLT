@@ -10,7 +10,6 @@
 #include "Graphics/Texture.h"
 #include "Graphics/Shader.h"
 
-#include "Core/Random.h"
 #include "FastNoiseLite/FastNoiseLite.h"
 
 class FlowField : public Application
@@ -18,6 +17,7 @@ class FlowField : public Application
 public:
 	FlowField() {}
 
+public:
 	mf4x4 proj;
 	std::unique_ptr<Shader> shader = nullptr;
 	std::unique_ptr<Shader> circle_shader = nullptr;
@@ -136,7 +136,7 @@ public:
 		m_gui.show_fps = false;
 
 		shader        = std::make_unique<Shader>("res/shaders/basic/default.vs", "res/shaders/basic/default.fs");
-		circle_shader = std::make_unique<Shader>("res/shaders/basic/circle.vs", "res/shaders/basic/circle.fs");
+		circle_shader = std::make_unique<Shader>("res/shaders/flow_field/circle.vs", "res/shaders/flow_field/circle.fs");
 
 		noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 		//noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);

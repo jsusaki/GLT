@@ -50,7 +50,7 @@ public:
 	{
 		screen_size    = { m_window.Width(), m_window.Height() };
 		sprite         = std::make_unique<Sprite>(screen_size.x, screen_size.y);
-		fractal_shader = std::make_unique<Shader>("res/shaders/basic/fractal.vs", "res/shaders/basic/fractal.fs");
+		fractal_shader = std::make_unique<Shader>("res/shaders/fractal/fractal.vs", "res/shaders/fractal/fractal.fs");
 	}
 
 	void ProcessInput() override

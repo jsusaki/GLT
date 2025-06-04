@@ -52,4 +52,15 @@ struct Sprite
 		m_quad->Draw();
 		m_texture->Unbind();
 	}
+
+	void Clear(Color c = { 0, 0, 0, 255 })
+	{
+		for (s32 x = 0; x < m_width; ++x)
+		{
+			for (s32 y = 0; y < m_height; ++y)
+			{
+				SetPixel(x, y, c.r, c.g, c.b, c.a);
+			}
+		}
+	}
 };

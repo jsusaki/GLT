@@ -8,13 +8,12 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/Shader.h"
 
-#include "Core/Random.h"
-
 class Pixels : public Application
 {
 public:
 	Pixels() {}
 
+public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> texture_shader;
 	Random rng;
@@ -41,6 +40,9 @@ public:
 				u8 r = rng.uniformi(0, 255);
 				u8 g = rng.uniformi(0, 255);
 				u8 b = rng.uniformi(0, 255);
+
+				s32 sx = x * scale;
+				s32 sy = y * scale;
 
 				for (s32 dx = 0; dx < scale; dx++)
 				{

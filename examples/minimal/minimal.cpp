@@ -1,10 +1,11 @@
 #include "Application.h"
 
-class Julia : public Application
+class Minimal : public Application
 {
 public:
-	Julia() {}
+	Minimal() {}
 
+public:
 	void Create() override
 	{
 
@@ -28,7 +29,7 @@ public:
 
 int main()
 {
-	Julia demo;
-	if (demo.Init("Julia", 800, 600))
+	Minimal demo;
+	if (demo.Init("Minimal", 800, 600))
 		demo.Start();
 }

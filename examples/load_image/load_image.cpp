@@ -8,6 +8,7 @@ class Image : public Application
 public:
 	Image() {}
 
+public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> texture_shader;
 

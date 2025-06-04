@@ -75,10 +75,7 @@
     <ClCompile Include="include\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\Ayre\ayre.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="examples\fractal\fractal.cpp">
+    <ClCompile Include="examples\star_system\star_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1037,6 +1034,9 @@
     <ClInclude Include="include\Graphics\Sprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics\Palette.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic\default.vs" />
@@ -1468,11 +1468,11 @@
     <None Include="res\shaders\model\model.fs" />
     <None Include="res\shaders\post_processing\solid.fs" />
     <None Include="res\shaders\basic\default.fs" />
-    <None Include="res\shaders\basic\circle.vs" />
-    <None Include="res\shaders\basic\circle.fs" />
+    <None Include="res\shaders\flow_field\circle.vs" />
+    <None Include="res\shaders\flow_field\circle.fs" />
     <None Include="res\shaders\basic\texture.vs" />
-    <None Include="res\shaders\basic\fractal.vs" />
-    <None Include="res\shaders\basic\fractal.fs" />
+    <None Include="res\shaders\fractal\fractal.vs" />
+    <None Include="res\shaders\fractal\fractal.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />
