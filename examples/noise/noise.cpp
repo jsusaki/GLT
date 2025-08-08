@@ -244,6 +244,6 @@ public:
 int main()
 {
 	Noise demo;
-	if (demo.Init("Noise", 800, 600))
+	if (demo.Init("Noise", 1280, 720))
 		demo.Start();
 }

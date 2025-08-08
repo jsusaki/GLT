@@ -40,6 +40,7 @@ public:
 
 	void Render() override
 	{
+		m_window.Clear();
 		shader->Use();
 		mesh->draw(GL_TRIANGLES);
 	}

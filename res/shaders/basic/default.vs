@@ -9,16 +9,16 @@ out vec3 Normal;
 out vec4 Color;
 out vec2 TexCoords;
 
-uniform mat4 projection;
+uniform mat4 proj_view;
 
 void main()
 {
-    gl_Position = projection * vec4(aPos, 1.0);
-
-    //gl_Position = vec4(aPos, 1.0);
-    //gl_Position = projection * view * model * vec4(aPos, 1.0);
-
     Normal = aNormal;
     Color = aColor;
     TexCoords = aTexCoords;
+
+    gl_Position = proj_view * vec4(aPos, 1.0);
+
+    // without camera
+    //gl_Position = vec4(aPos, 1.0);
 }

@@ -75,7 +75,7 @@
     <ClCompile Include="include\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\star_system\star_system.cpp">
+    <ClCompile Include="examples\black_hole\black_hole.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
