@@ -75,7 +75,7 @@
     <ClCompile Include="include\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\black_hole\black_hole.cpp">
+    <ClCompile Include="examples\black_hole\black_hole2d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1473,6 +1473,7 @@
     <None Include="res\shaders\basic\texture.vs" />
     <None Include="res\shaders\fractal\fractal.vs" />
     <None Include="res\shaders\fractal\fractal.fs" />
+    <None Include="res\shaders\black_hole\black_hole.fs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />

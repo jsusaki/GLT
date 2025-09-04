@@ -178,7 +178,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\black_hole\black_hole.cpp" />
+    <ClCompile Include="examples\black_hole\black_hole2d.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -661,6 +661,7 @@
     <None Include="lib\glm\gtx\vector_angle.inl" />
     <None Include="lib\glm\gtx\vector_query.inl" />
     <None Include="lib\glm\gtx\wrap.inl" />
+    <None Include="res\shaders\black_hole\black_hole.fs" />
     <None Include="res\shaders\flow_field\circle.fs" />
     <None Include="res\shaders\flow_field\circle.vs" />
     <None Include="res\shaders\fractal\fractal.fs" />

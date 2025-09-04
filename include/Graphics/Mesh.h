@@ -159,9 +159,9 @@ struct Mesh
 	}
 };
 
-struct triangle : public Mesh
+struct Triangle : public Mesh
 {
-	triangle()
+	Triangle()
 	{
 		vertices = {
 			// position               normal                color                       uv
@@ -174,16 +174,16 @@ struct triangle : public Mesh
 	}
 };
 
-struct quad : public Mesh
+struct Quad : public Mesh
 {
-	quad()
+	Quad()
 	{
 		vertices = {
 			//    position           normal            color (white)			// uv
-			{{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 0.0f }}, // bottom-left
-			{{ 1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 0.0f }}, // bottom-right
-			{{ 1.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 1.0f, 1.0f }}, // top-right
-			{{-1.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 1.0f, 1.0f},{ 0.0f, 1.0f }}, // top-left
+			{{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f, 1.0f, 1.0f },{ 1.0f, 0.0f }}, // bottom-left
+			{{ 1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f, 1.0f, 1.0f },{ 0.0f, 0.0f }}, // bottom-right
+			{{ 1.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f, 1.0f, 1.0f },{ 1.0f, 1.0f }}, // top-right
+			{{-1.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, { 1.0f, 1.0f, 1.0f, 1.0f },{ 0.0f, 1.0f }}, // top-left
 		};
 
 		indices = {
@@ -195,9 +195,9 @@ struct quad : public Mesh
 	}
 };
 
-struct cube : public Mesh
+struct Cube : public Mesh
 {
-	cube()
+	Cube()
 	{
 		vertices = {
 												     // color: white
@@ -231,7 +231,116 @@ struct cube : public Mesh
 	}
 };
 
-struct model
+struct Sphere : public Mesh
+{
+	Sphere(f32 radius = 1.0f, u32 sector = 36, u32 stack = 18)
+	{
+		// Generate vertices
+		for (u32 i = 0; i <= stack; i++)
+		{
+			f32 angle = PI / 2 - i * PI / stack;     // from pi/2 to -pi/2
+			f32 xy = radius * std::cosf(angle);      // r * cos(u)
+			f32 z  = radius * std::sinf(angle);      // r * sin(u)
+
+			for (u32 j = 0; j <= sector; j++)
+			{
+				f32 sectorAngle = j * 2 * PI / sector; // 0 to 2pi
+
+				f32 x = xy * std::cosf(sectorAngle);
+				f32 y = xy * std::sinf(sectorAngle);
+
+				glm::vec3 position = { x, y, z };
+				glm::vec3 normal   = glm::normalize(position);
+				glm::vec4 color    = { 1.0f, 1.0f, 1.0f, 1.0f };
+				glm::vec2 uv       = { (f32)j / sector, (f32)i / stack };
+
+				vertices.push_back({ position, normal, color, uv });
+			}
+		}
+
+		// Generate indices
+		for (u32 i = 0; i < stack; i++)
+		{
+			u32 k1 = i * (sector + 1); // beginning of current stack
+			u32 k2 = k1 + sector + 1;  // beginning of next stack
+
+			for (u32 j = 0; j < sector; j++, k1++, k2++)
+			{
+				if (i != 0)
+				{
+					indices.push_back(k1);
+					indices.push_back(k2);
+					indices.push_back(k1 + 1);
+				}
+
+				if (i != (stack - 1))
+				{
+					indices.push_back(k1 + 1);
+					indices.push_back(k2);
+					indices.push_back(k2 + 1);
+				}
+			}
+		}
+
+		setup_buffers();
+	}
+};
+
+struct Ring : public Mesh
+{
+	Ring(float innerRadius = 0.5f, float outerRadius = 1.0f, unsigned int segments = 64)
+	{
+		vertices.clear();
+		indices.clear();
+
+		float step = glm::two_pi<float>() / static_cast<float>(segments);
+
+		for (unsigned int i = 0; i <= segments; ++i)
+		{
+			float theta = i * step;
+			float cosT = cos(theta);
+			float sinT = sin(theta);
+
+			// outer vertex
+			vf3 posOuter = { outerRadius * cosT, 0.0f, outerRadius * sinT };
+			vf3 normal = { 0.0f, 0.0f, 1.0f };
+			vf4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			vf2 uvOuter = { (cosT + 1.0f) * 0.5f, (sinT + 1.0f) * 0.5f };
+			vertices.push_back({ posOuter, normal, color, uvOuter });
+
+			// inner vertex
+			vf3 posInner = { innerRadius * cosT, 0.0f, innerRadius * sinT };
+			glm::vec2 uvInner = {
+				(cosT * (innerRadius / outerRadius) + 1.0f) * 0.5f,
+				(sinT * (innerRadius / outerRadius) + 1.0f) * 0.5f 
+			};
+			vertices.push_back({ posInner, normal, color, uvInner });
+		}
+
+		// generate triangle indices
+		for (unsigned int i = 0; i < segments; ++i)
+		{
+			unsigned int outer0 = i * 2;
+			unsigned int inner0 = i * 2 + 1;
+			unsigned int outer1 = (i + 1) * 2;
+			unsigned int inner1 = (i + 1) * 2 + 1;
+
+			indices.push_back(outer0);
+			indices.push_back(inner0);
+			indices.push_back(outer1);
+
+			indices.push_back(outer1);
+			indices.push_back(inner0);
+			indices.push_back(inner1);
+		}
+
+		setup_buffers();
+	}
+};
+
+
+
+struct Model
 {
 	mf4x4 m_model;
 	Mesh m_mesh;
@@ -240,7 +349,7 @@ struct model
 	vf3 m_scale;
 	f32 m_angle;
 
-	model(const std::string& filepath)
+	Model(const std::string& filepath)
 	{
 		m_model    = mf4x4(1.0f);
 		m_position = vf3(0.0f, 0.0f, 0.0f);
@@ -250,7 +359,7 @@ struct model
 		m_mesh     = Mesh(filepath);
 	}
 
-	model(Mesh& m)
+	Model(Mesh& m)
 	{
 		m_model    = mf4x4(1.0f);
 		m_position = vf3(0.0f, 0.0f, 0.0f);

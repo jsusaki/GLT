@@ -17,8 +17,8 @@ void main()
     Color = aColor;
     TexCoords = aTexCoords;
 
-    gl_Position = proj_view * vec4(aPos, 1.0);
+    //gl_Position = proj_view * vec4(aPos, 1.0);
 
     // without camera
-    //gl_Position = vec4(aPos, 1.0);
+    gl_Position = vec4(aPos, 1.0);
 }

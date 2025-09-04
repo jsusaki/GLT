@@ -6,6 +6,7 @@
 // Project the point in [-1, 1] screen space onto the arcball sphere
 static qf32 screen_to_arcball(const vf2& p);
 
+// ArcballCamera Camera Implementation
 ArcballCamera::ArcballCamera(const vf3& eye, const vf3& center, const vf3& up, f32 fov, f32 aspect, f32 near, f32 far)
 {
     field_of_view = fov;
@@ -145,4 +146,99 @@ glm::quat screen_to_arcball(const vf2& p)
         const vf2 proj = glm::normalize(p);
         return qf32(0.0f, proj.x, proj.y, 0.f);
     }
+}
+
+
+
+// Perspective Camera Implementation
+PerspectiveCamera::PerspectiveCamera(const vf3& eye, const vf3& center, const vf3& up, f32 fov, f32 aspect, f32 near, f32 far)
+{
+    m_field_of_view = fov;
+    m_aspect_ratio = aspect;
+    m_near_plane = near;
+    m_far_plane = far;
+
+    init(eye, center, up);
+}
+
+void PerspectiveCamera::init(const vf3& eye, const vf3& center, const vf3& up)
+{
+    m_position = eye;
+    m_forward = glm::normalize(center - eye);
+    m_right = glm::normalize(glm::cross(m_forward, up));
+    m_world_up = glm::normalize(up);
+
+    m_yaw = glm::degrees(std::atan2(m_forward.z, m_forward.x));
+    m_pitch = glm::degrees(std::asin(m_forward.y));
+
+    update_camera();
+}
+
+void PerspectiveCamera::rotate(vf2 prev_mouse, vf2 curr_mouse)
+{
+    vf2 delta = curr_mouse - prev_mouse;
+
+    const f32 sensitivity = 0.2f;
+    m_yaw   += delta.x * sensitivity;
+    m_pitch += delta.y * sensitivity;
+
+    m_pitch = glm::clamp(m_pitch, -89.9f, 89.9f);
+
+    update_camera();
+}
+
+void PerspectiveCamera::pan(vf2 mouse_delta)
+{
+    f32 pan_speed = 0.002f   * glm::length(m_position - (m_position + m_forward));
+    m_position -= m_right    * mouse_delta.x * pan_speed;
+    m_position += m_world_up * mouse_delta.y * pan_speed;
+    update_camera();
+}
+
+void PerspectiveCamera::zoom(const f32 zoom_amount)
+{
+    m_position += m_forward * zoom_amount;
+    update_camera();
+}
+
+void PerspectiveCamera::translate(vf3 offset)
+{
+    m_position += offset;
+    update_camera();
+}
+
+const mf4x4& PerspectiveCamera::view()           const { return m_view; }
+const mf4x4& PerspectiveCamera::inv_view()       const { return m_inv_view; }
+const mf4x4& PerspectiveCamera::projection()     const { return m_proj; }
+const mf4x4& PerspectiveCamera::inv_projection() const { return m_inv_proj; }
+const mf4x4  PerspectiveCamera::proj_camera()    const { return m_proj * m_view; }
+
+vf3 PerspectiveCamera::eye()     const { return m_position; }
+vf3 PerspectiveCamera::front()   const { return m_forward; }
+vf3 PerspectiveCamera::up()      const { return m_up; }
+vf3 PerspectiveCamera::center()  const { return m_position + m_forward; }
+vf3 PerspectiveCamera::right()   const { return m_right; }
+
+void PerspectiveCamera::update_camera()
+{
+    // recalc forward/right/up from yaw/pitch
+    vf3 f;
+    f.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    f.y = sin(glm::radians(m_pitch));
+    f.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    m_forward = glm::normalize(f);
+
+    m_right = glm::normalize(glm::cross(m_forward, m_world_up));
+    m_up = glm::normalize(glm::cross(m_right, m_forward));
+
+    m_view = glm::lookAt(m_position, m_position + m_forward, m_up);
+    m_inv_view = glm::inverse(m_view);
+
+    update_projection(m_field_of_view, m_aspect_ratio, m_near_plane, m_far_plane);
+}
+
+void PerspectiveCamera::update_projection(f32 fov, f32 aspect, f32 near, f32 far)
+{
+    m_proj = glm::perspective(glm::radians(fov), aspect, near, far);
+    m_inv_proj = glm::inverse(m_proj);
 }
