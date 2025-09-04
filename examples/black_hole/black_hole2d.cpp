@@ -1,29 +1,11 @@
 /*
-	Black Hole Simulation
+	Black Hole
 
 		Method:
-			Raytracing + Black Hole Physics
-
-		Concepts:
-			Solar Mass:     SM = 1.989 * 10^30 kg
-			Mass:            M = 2.6 * 10^9 * SM
-			Gravity:         G = 6.67 * 10^-11 N
-			Speed of Light:  c = 299 792 458 m/s
-			Event Horizon (Schwarzchild radius)
-				Rs = 2 * G * M / c^2
-			Accretion Disc: 3.0 * Rs
-			Photon Sphere:  1.5 * Rs
+			Visual Effect Simulation
 
 		Graphics:
 			Gravitational Lensing
-
-
-		Scene
-			Celestial Sphere (Skybox)
-			Black Hole (Sphere)
-				Accretion Disc (Ring)
-				Photon Sphere (Sphere)
-			Camera (Ray Tracing)
 
 		Referenes:
 			https://github.com/kavan010/black_hole
