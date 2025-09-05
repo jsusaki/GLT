@@ -17,7 +17,7 @@
 			How to draw a Black Hole: https://rantonels.github.io/starless/
 			Visualizing Black Holes with General Relativistic Ray Tracing: https://blog.seanholloway.com/2022/03/13/visualizing-black-holes-with-general-relativistic-ray-tracing/
 			Visualizing General Relativity: https://michaelmoroz.github.io/TracingGeodesics/
-
+			Gravitational Lensing by Spinning Black Holes in Astrophysics, and in the Movie Interstellar: https://arxiv.org/pdf/1502.03808
 			Ray Tracing Black Holes:  https://eliot1019.github.io/Black-Hole-Raytracer/
 			Implementing General Relativity: https://20k.github.io/c++/2024/05/31/schwarzschild.html
 */
@@ -33,9 +33,6 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Sprite.h"
-
-
-#include "Graphics/Camera.h"
 
 int SCREEN_WIDTH  = 1280;
 int SCREEN_HEIGHT = 720;
@@ -55,18 +52,20 @@ public:
 
 	struct ShaderConfig 
 	{
-		glm::vec2 bh_center = glm::vec2(0.5f, 0.5f);
+		glm::vec2 bh_center        = glm::vec2(0.5f, 0.5f);
 		float schwarzschild_radius = 0.10f;
-		float lensing_strength = 0.75f;
-		float einstein_radius = 0.05f;
-		float accretion_thickness = 0.06f;
-		float accretion_intensity = 1.00f;
-		float chroma_offset = 0.16f;
-		float blur_strength = 0.32f;
+		float lensing_strength     = 0.75f;
+		float einstein_radius      = 0.05f;
+		float accretion_thickness  = 0.06f;
+		float accretion_intensity  = 1.00f;
+		float chroma_offset        = 0.16f;
+		float blur_strength        = 0.32f;
 
 		float photon_ring_intensity = 0.0f;
 		float photon_ring_thickness = 0.0f;
-	} config;
+	};
+
+	ShaderConfig config;
 
 public:
 	void Create() override
@@ -133,7 +132,7 @@ public:
 int main()
 {
 	BlackHole demo;
-	if (demo.Init("BlackHole", SCREEN_WIDTH, SCREEN_HEIGHT))
+	if (demo.Init("Black Hole", SCREEN_WIDTH, SCREEN_HEIGHT))
 		demo.Start();
 	return 0;
 }
