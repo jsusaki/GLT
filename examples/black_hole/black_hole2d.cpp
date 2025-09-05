@@ -37,6 +37,9 @@
 
 #include "Graphics/Camera.h"
 
+int SCREEN_WIDTH  = 1280;
+int SCREEN_HEIGHT = 720;
+
 class BlackHole : public Application
 {
 public:
@@ -47,19 +50,22 @@ public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> texture_shader;
 
+	float time_acc = 0.0f;
+	float radius   = 0.1f;
+
 	struct ShaderConfig 
 	{
 		glm::vec2 bh_center = glm::vec2(0.5f, 0.5f);
-		float schwarzschild_radius = 0.05f;
-		float lensing_strength = 0.30f;
-		float einstein_radius = 0.02f;
-		float accretion_thickness = 0.02f;
+		float schwarzschild_radius = 0.10f;
+		float lensing_strength = 0.75f;
+		float einstein_radius = 0.05f;
+		float accretion_thickness = 0.06f;
 		float accretion_intensity = 1.00f;
-		float chroma_offset = 0.04f;
+		float chroma_offset = 0.16f;
 		float blur_strength = 0.32f;
 
-		float photon_ring_intensity = 0.5f;
-		float photon_ring_thickness = 0.01f;
+		float photon_ring_intensity = 0.0f;
+		float photon_ring_thickness = 0.0f;
 	} config;
 
 public:
@@ -72,20 +78,25 @@ public:
 
 	void ProcessInput() override
 	{
-
+		if (m_input.IsKeyPressed(GLFW_KEY_SPACE))
+			m_gui.show_gui = !m_gui.show_gui;
 	}
 
 	void Simulate(f32 dt) override
 	{
+		time_acc += dt;
+		config.bh_center.x = 0.5f + radius * std::cos(time_acc);
+		config.bh_center.y = 0.5f + radius * std::sin(time_acc);
 	}
 
 	void Render() override
 	{
 		m_window.Clear();
 
-		// Background Stars
 		black_hole_shader->Use();
 		black_hole_shader->SetUniform("screen_texture", 0);	
+		black_hole_shader->SetUniform("resolution", { SCREEN_WIDTH, SCREEN_HEIGHT });
+
 		black_hole_shader->SetUniform("bh_center",             config.bh_center);
 		black_hole_shader->SetUniform("schwarzschild_radius",  config.schwarzschild_radius);
 		black_hole_shader->SetUniform("lensing_strength",      config.lensing_strength);
@@ -102,7 +113,9 @@ public:
 		m_gui.m_func = [&]() {
 			ImGui::Begin("Black Hole Shader");
 			ImGui::SeparatorText("Black Hole Controls");
-			ImGui::SliderFloat2("bh_center",           (float*)&config.bh_center,      0.0f, 1.0f);
+			ImGui::SliderFloat("radius", &radius, 0.0f, 1.0f);
+
+			ImGui::SliderFloat2("bh_center",           (float*)&config.bh_center,       0.0f, 1.0f);
 			ImGui::SliderFloat("schwarzschild_radius",  &config.schwarzschild_radius,   0.0f, 1.0f);
 			ImGui::SliderFloat("lensing_strength",      &config.lensing_strength,       0.0f, 1.0f);
 			ImGui::SliderFloat("einstein_radius",       &config.einstein_radius,        0.0f, 0.1f);
@@ -110,19 +123,17 @@ public:
 			ImGui::SliderFloat("accretion_intensity",   &config.accretion_intensity,    0.0f, 3.0f);
 			ImGui::SliderFloat("chroma_offset",         &config.chroma_offset,          0.0f, 1.0f);
 			ImGui::SliderFloat("blur_strength",         &config.blur_strength,          0.0f, 1.0f);
-			ImGui::SliderFloat("photon_ring_intensity", &config.photon_ring_intensity, 0.0f, 3.0f);
-			ImGui::SliderFloat("photon_ring_thickness", &config.photon_ring_thickness, 0.0f, 0.1f);
+			ImGui::SliderFloat("photon_ring_intensity", &config.photon_ring_intensity,  0.0f, 3.0f);
+			ImGui::SliderFloat("photon_ring_thickness", &config.photon_ring_thickness,  0.0f, 0.1f);
 			ImGui::End();
 		};
-
-
 	}
 };
 
 int main()
 {
 	BlackHole demo;
-	if (demo.Init("BlackHole", 1280, 720))
+	if (demo.Init("BlackHole", SCREEN_WIDTH, SCREEN_HEIGHT))
 		demo.Start();
 	return 0;
 }

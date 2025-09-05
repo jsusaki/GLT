@@ -4,6 +4,7 @@ in vec2 TexCoords;
 out vec4 FragColor;
 
 uniform sampler2D screen_texture;
+uniform vec2 resolution;
 
 uniform vec2  bh_center;
 uniform float schwarzschild_radius;
@@ -19,10 +20,13 @@ uniform float photon_ring_thickness;
 
 void main() 
 {
-    vec2 uv   = TexCoords;
-    vec2 dir  = uv - bh_center;
-    float r   = length(dir);
-    float r_s = schwarzschild_radius * 0.5;
+    vec2 uv      = TexCoords;
+    float aspect = resolution.x / resolution.y;
+    vec2 dir     = uv - bh_center;
+         dir     = vec2(dir.x * aspect, dir.y);
+    float r      = length(dir);
+
+    float r_s    = schwarzschild_radius * 0.5;
 
     vec4 color = texture(screen_texture, uv);
 
@@ -62,7 +66,7 @@ void main()
         blur_accum /= float(samples);
 
         // Accretion disk
-        float disk      = smoothstep(accretion_thickness, 0.0, abs(r - schwarzschild_radius * 4.0 * 0.8));
+        float disk      = smoothstep(accretion_thickness, 0.0, abs(r - schwarzschild_radius * 4.0));
         vec3 disk_color = vec3(1.0, 0.7, 0.3) * disk * accretion_intensity;
 
         color.rgb = mix(lens_color.rgb, blur_accum.rgb, 0.4) + disk_color;
