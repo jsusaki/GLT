@@ -17,7 +17,7 @@
 			How to draw a Black Hole: https://rantonels.github.io/starless/
 			Visualizing Black Holes with General Relativistic Ray Tracing: https://blog.seanholloway.com/2022/03/13/visualizing-black-holes-with-general-relativistic-ray-tracing/
 			Visualizing General Relativity: https://michaelmoroz.github.io/TracingGeodesics/
-			Gravitational Lensing by Spinning Black Holes in Astrophysics, and in the Movie Interstellar: https://arxiv.org/pdf/1502.03808
+			Gravitational Lensing by Spinning Black Holes in Astrophysics, and in the Movie s32erstellar: https://arxiv.org/pdf/1502.03808
 			Ray Tracing Black Holes:  https://eliot1019.github.io/Black-Hole-Raytracer/
 			Implementing General Relativity: https://20k.github.io/c++/2024/05/31/schwarzschild.html
 */
@@ -34,8 +34,8 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Sprite.h"
 
-int SCREEN_WIDTH  = 1280;
-int SCREEN_HEIGHT = 720;
+s32 SCREEN_WIDTH  = 1280;
+s32 SCREEN_HEIGHT = 720;
 
 class BlackHole : public Application
 {
@@ -47,22 +47,22 @@ public:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Shader> texture_shader;
 
-	float time_acc = 0.0f;
-	float radius   = 0.1f;
+	f32 time_acc = 0.0f;
+	f32 radius   = 0.1f;
 
 	struct ShaderConfig 
 	{
 		glm::vec2 bh_center        = glm::vec2(0.5f, 0.5f);
-		float schwarzschild_radius = 0.10f;
-		float lensing_strength     = 0.75f;
-		float einstein_radius      = 0.05f;
-		float accretion_thickness  = 0.06f;
-		float accretion_intensity  = 1.00f;
-		float chroma_offset        = 0.16f;
-		float blur_strength        = 0.32f;
+		f32 schwarzschild_radius = 0.10f;
+		f32 lensing_strength     = 0.75f;
+		f32 einstein_radius      = 0.05f;
+		f32 accretion_thickness  = 0.06f;
+		f32 accretion_intensity  = 1.00f;
+		f32 chroma_offset        = 0.16f;
+		f32 blur_strength        = 0.32f;
 
-		float photon_ring_intensity = 0.0f;
-		float photon_ring_thickness = 0.0f;
+		f32 photon_ring_intensity = 0.0f;
+		f32 photon_ring_thickness = 0.0f;
 	};
 
 	ShaderConfig config;
@@ -101,7 +101,7 @@ public:
 		black_hole_shader->SetUniform("lensing_strength",      config.lensing_strength);
 		black_hole_shader->SetUniform("einstein_radius",       config.einstein_radius);
 		black_hole_shader->SetUniform("accretion_thickness",   config.accretion_thickness);
-		black_hole_shader->SetUniform("accretion_intensity",   config.accretion_intensity);
+		black_hole_shader->SetUniform("accretion_s32ensity",   config.accretion_intensity);
 		black_hole_shader->SetUniform("chroma_offset",         config.chroma_offset);
 		black_hole_shader->SetUniform("blur_strength",         config.blur_strength);
 		black_hole_shader->SetUniform("photon_ring_intensity", config.photon_ring_intensity);
@@ -114,7 +114,7 @@ public:
 			ImGui::SeparatorText("Black Hole Controls");
 			ImGui::SliderFloat("radius", &radius, 0.0f, 1.0f);
 
-			ImGui::SliderFloat2("bh_center",           (float*)&config.bh_center,       0.0f, 1.0f);
+			ImGui::SliderFloat2("bh_center",           (f32*)&config.bh_center,         0.0f, 1.0f);
 			ImGui::SliderFloat("schwarzschild_radius",  &config.schwarzschild_radius,   0.0f, 1.0f);
 			ImGui::SliderFloat("lensing_strength",      &config.lensing_strength,       0.0f, 1.0f);
 			ImGui::SliderFloat("einstein_radius",       &config.einstein_radius,        0.0f, 0.1f);
@@ -129,7 +129,7 @@ public:
 	}
 };
 
-int main()
+s32 main()
 {
 	BlackHole demo;
 	if (demo.Init("Black Hole", SCREEN_WIDTH, SCREEN_HEIGHT))
