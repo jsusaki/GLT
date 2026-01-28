@@ -115,3 +115,4 @@ void Application::Create() {}
 void Application::ProcessInput() {}
 void Application::Simulate(f32 dt) {}
 void Application::Render() {}
+void Application::Destroy(){}

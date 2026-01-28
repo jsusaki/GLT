@@ -68,6 +68,7 @@ protected: // Main functions to override
     virtual void ProcessInput();
     virtual void Simulate(f32 dt);
     virtual void Render();
+    virtual void Destroy();
 
 protected:
     Window m_window;

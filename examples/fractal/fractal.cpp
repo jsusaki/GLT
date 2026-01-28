@@ -25,7 +25,8 @@ public:
 	bool show_julia = true;
 
 	// Beautiful julia constants
-	vf2 c = { -0.7269f, 0.1889f };
+	//vf2 c = { -0.7269f, 0.1889f };
+	vf2 c = { -0.745f, 0.1889f };
 	//vf2 c = {-0.943072290, 0.258960843};
 	//vf2 c = {-0.772466100, 0.103424500};
 	//vf2 c = {-0.743510000, 0.127090000};
@@ -88,7 +89,7 @@ public:
 			vf2 before_zoom = mouse_ndc * zoom + center_offset;
 
 			f32 zoom_factor = std::exp(-wheel_delta * zoom_sensitivity);
-			zoom = std::clamp(zoom * zoom_factor, 1e-6f, 1.5f);
+			zoom = std::clamp(zoom * zoom_factor, 1e-6f, 2.0f);
 
 			vf2 after_zoom = mouse_ndc * zoom + center_offset;
 
@@ -165,3 +166,4 @@ int main()
 	if (demo.Init("Fractal", 1280, 720))
 		demo.Start();
 }
+

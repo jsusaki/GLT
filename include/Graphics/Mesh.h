@@ -159,9 +159,9 @@ struct Mesh
 	}
 };
 
-struct Triangle : public Mesh
+struct Prisma : public Mesh
 {
-	Triangle()
+	Prisma()
 	{
 		vertices = {
 			// position               normal                color                       uv
@@ -369,9 +369,9 @@ struct Model
 		m_mesh     = m;
 	}
 
-	void draw(std::shared_ptr<Shader> shader, s32 mode = GL_TRIANGLES)
+	void draw(std::shared_ptr<Shader> prisma_shader, s32 mode = GL_TRIANGLES)
 	{
-		shader->Use();
+		prisma_shader->Use();
 
 		m_model = mf4x4(1.0f);
 		m_model = glm::rotate(m_model, glm::radians(m_angle), { 1.0f, 0.0f, 0.0f });
@@ -381,9 +381,9 @@ struct Model
 		m_model = glm::translate(m_model, m_position);
 		m_model = glm::scale(m_model, m_scale);
 
-		shader->SetUniform("model", m_model);
+		prisma_shader->SetUniform("model", m_model);
 		m_mesh.draw(mode);
-		shader->Unuse();
+		prisma_shader->Unuse();
 	}
 
 	void scale(vf3 scale) { m_scale *= scale; }

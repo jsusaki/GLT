@@ -52,44 +52,45 @@ std::string Shader::LoadFromFile(const std::string& filepath)
     std::string data;
     std::ifstream file(filepath, std::ios::in | std::ios::binary);
     if (!file.is_open())
-        std::cout << "Could not open " << filepath << "\n";
+        std::cout << "Could not open: " << filepath << "\n";
 
     std::copy(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>(), std::back_inserter(data));
     file.close();
+    std::cout << "Successfully loaded: " << filepath << "\n";
 
     return data;
 }
 
 u32 Shader::Compile(ShaderType type, std::string& source)
 {
-    u32 shader = glCreateShader(type);
+    u32 prisma_shader = glCreateShader(type);
 
     const char* shader_src = source.c_str();
-    glShaderSource(shader, 1, &shader_src, nullptr);
+    glShaderSource(prisma_shader, 1, &shader_src, nullptr);
 
-    glCompileShader(shader);
+    glCompileShader(prisma_shader);
 
     s32 status = 0;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+    glGetShaderiv(prisma_shader, GL_COMPILE_STATUS, &status);
     if (status == GL_FALSE)
     {
         s32 max_length = 0;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &max_length);
+        glGetShaderiv(prisma_shader, GL_INFO_LOG_LENGTH, &max_length);
 
         std::vector<char> error_log(max_length);
-        glGetShaderInfoLog(shader, max_length, &max_length, &error_log[0]);
+        glGetShaderInfoLog(prisma_shader, max_length, &max_length, &error_log[0]);
 
-        glDeleteShader(shader);
+        glDeleteShader(prisma_shader);
 
         std::printf("%s\n", &(error_log[0]));
     }
 
-    return shader;
+    return prisma_shader;
 }
 
-void Shader::Attach(u32& shader)
+void Shader::Attach(u32& prisma_shader)
 {
-    glAttachShader(m_id, shader);
+    glAttachShader(m_id, prisma_shader);
 }
 
 void Shader::Link()
@@ -112,14 +113,14 @@ void Shader::Link()
     }
 }
 
-void Shader::Detach(u32& shader)
+void Shader::Detach(u32& prisma_shader)
 {
-    glDetachShader(m_id, shader);
+    glDetachShader(m_id, prisma_shader);
 }
 
-void Shader::Delete(u32& shader)
+void Shader::Delete(u32& prisma_shader)
 {
-    glDeleteShader(shader);
+    glDeleteShader(prisma_shader);
 }
 
 u32 Shader::GetAttribute(const std::string& name) const

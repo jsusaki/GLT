@@ -47,10 +47,10 @@ public:
 public:
 	std::string LoadFromFile(const std::string& filepath);
 	u32 Compile(ShaderType type, std::string& source);
-	void Attach(u32& shader);
+	void Attach(u32& prisma_shader);
 	void Link();
-	void Detach(u32& shader);
-	void Delete(u32& shader);
+	void Detach(u32& prisma_shader);
+	void Delete(u32& prisma_shader);
 
 public:
 	u32 GetAttribute(const std::string& name) const;

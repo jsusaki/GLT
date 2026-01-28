@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -141,11 +141,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\git\projects\GLT\GLT\lib\stb;D:\git\projects\GLT\GLT\lib\imgui;D:\git\projects\GLT\GLT\lib\imgui\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\git\projects\GLT\GLT\lib\stb;D:\git\projects\GLT\GLT\lib\imgui;D:\git\projects\GLT\GLT\lib\imgui\backends;D:\git\projects\GLT\GLT\lib\soloud\include;D:\git\projects\GLT\GLT\lib\soloud\src\backend\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -178,7 +177,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\black_hole\black_hole2d.cpp" />
+    <ClCompile Include="examples\experiment\prisma.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -196,6 +195,56 @@
     <ClCompile Include="lib\imgui\implot_demo.cpp" />
     <ClCompile Include="lib\imgui\implot_items.cpp" />
     <ClCompile Include="lib\imgui\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\monotone\soloud_monotone.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\noise\soloud_noise.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\openmpt\soloud_openmpt.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\openmpt\soloud_openmpt_dll.c" />
+    <ClCompile Include="lib\soloud\src\audiosource\sfxr\soloud_sfxr.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\speech\darray.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\speech\klatt.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\speech\resonator.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\speech\soloud_speech.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\speech\tts.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\tedsid\sid.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\tedsid\soloud_tedsid.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\tedsid\ted.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\vic\soloud_vic.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\vizsn\soloud_vizsn.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\wav\dr_impl.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\wav\soloud_wav.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\wav\soloud_wavstream.cpp" />
+    <ClCompile Include="lib\soloud\src\audiosource\wav\stb_vorbis.c" />
+    <ClCompile Include="lib\soloud\src\backend\miniaudio\soloud_miniaudio.cpp" />
+    <ClCompile Include="lib\soloud\src\backend\null\soloud_null.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_audiosource.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_bus.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_3d.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_basicops.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_faderops.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_filterops.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_getters.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_setters.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_voicegroup.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_core_voiceops.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_fader.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_fft.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_fft_lut.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_file.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_filter.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_misc.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_queue.cpp" />
+    <ClCompile Include="lib\soloud\src\core\soloud_thread.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_bassboostfilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_biquadresonantfilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_dcremovalfilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_echofilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_fftfilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_flangerfilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_freeverbfilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_lofifilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_robotizefilter.cpp" />
+    <ClCompile Include="lib\soloud\src\filter\soloud_waveshaperfilter.cpp" />
     <ClCompile Include="lib\stb\stb_image.cpp" />
     <ClCompile Include="include\Application.cpp" />
     <ClCompile Include="include\Core\Window.cpp" />
@@ -518,6 +567,52 @@
     <ClInclude Include="lib\imgui\imstb_textedit.h" />
     <ClInclude Include="lib\imgui\imstb_truetype.h" />
     <ClInclude Include="lib\imgui\misc\cpp\imgui_stdlib.h" />
+    <ClInclude Include="lib\soloud\include\soloud.h" />
+    <ClInclude Include="lib\soloud\include\soloud_audiosource.h" />
+    <ClInclude Include="lib\soloud\include\soloud_bassboostfilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_biquadresonantfilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_bus.h" />
+    <ClInclude Include="lib\soloud\include\soloud_c.h" />
+    <ClInclude Include="lib\soloud\include\soloud_dcremovalfilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_echofilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_error.h" />
+    <ClInclude Include="lib\soloud\include\soloud_fader.h" />
+    <ClInclude Include="lib\soloud\include\soloud_fft.h" />
+    <ClInclude Include="lib\soloud\include\soloud_fftfilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_file.h" />
+    <ClInclude Include="lib\soloud\include\soloud_file_hack_off.h" />
+    <ClInclude Include="lib\soloud\include\soloud_file_hack_on.h" />
+    <ClInclude Include="lib\soloud\include\soloud_filter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_flangerfilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_freeverbfilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_internal.h" />
+    <ClInclude Include="lib\soloud\include\soloud_lofifilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_misc.h" />
+    <ClInclude Include="lib\soloud\include\soloud_monotone.h" />
+    <ClInclude Include="lib\soloud\include\soloud_noise.h" />
+    <ClInclude Include="lib\soloud\include\soloud_openmpt.h" />
+    <ClInclude Include="lib\soloud\include\soloud_queue.h" />
+    <ClInclude Include="lib\soloud\include\soloud_robotizefilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_sfxr.h" />
+    <ClInclude Include="lib\soloud\include\soloud_speech.h" />
+    <ClInclude Include="lib\soloud\include\soloud_tedsid.h" />
+    <ClInclude Include="lib\soloud\include\soloud_thread.h" />
+    <ClInclude Include="lib\soloud\include\soloud_vic.h" />
+    <ClInclude Include="lib\soloud\include\soloud_vizsn.h" />
+    <ClInclude Include="lib\soloud\include\soloud_wav.h" />
+    <ClInclude Include="lib\soloud\include\soloud_waveshaperfilter.h" />
+    <ClInclude Include="lib\soloud\include\soloud_wavstream.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\speech\darray.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\speech\klatt.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\speech\resonator.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\speech\tts.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\tedsid\sid.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\tedsid\ted.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\wav\dr_flac.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\wav\dr_mp3.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\wav\dr_wav.h" />
+    <ClInclude Include="lib\soloud\src\audiosource\wav\stb_vorbis.h" />
+    <ClInclude Include="lib\soloud\src\backend\miniaudio\miniaudio.h" />
     <ClInclude Include="lib\stb\stb_image.h" />
     <ClInclude Include="include\Core\Common.h" />
   </ItemGroup>
@@ -661,7 +756,10 @@
     <None Include="lib\glm\gtx\vector_angle.inl" />
     <None Include="lib\glm\gtx\vector_query.inl" />
     <None Include="lib\glm\gtx\wrap.inl" />
+    <None Include="lib\soloud\src\audiosource\speech\Elements.def" />
     <None Include="res\shaders\black_hole\black_hole.fs" />
+    <None Include="res\shaders\experiment\prisma.vs" />
+    <None Include="res\shaders\experiment\prisma.fs" />
     <None Include="res\shaders\flow_field\circle.fs" />
     <None Include="res\shaders\flow_field\circle.vs" />
     <None Include="res\shaders\fractal\fractal.fs" />
