@@ -85,7 +85,6 @@ public:
 
 		camera = Camera(eye, center, up, fov, aspect, near, far);
 
-
 		/*
 		// Arcball Camera
 		vf3 eye = { 0.0f, 15.0f, 0.0f };
