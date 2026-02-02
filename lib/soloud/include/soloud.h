@@ -516,11 +516,11 @@ namespace SoLoud
 		// Approximate volume for channels.
 		float mVisualizationChannelVolume[MAX_CHANNELS];
 		// Mono-mixed wave data for visualization and for visualization FFT input
-		float mVisualizationWaveData[256];
+		float mVisualizationWaveData[4096];
 		// FFT output data
-		float mFFTData[256];
+		float mFFTData[4096];
 		// Snapshot of wave data for visualization
-		float mWaveData[256];
+		float mWaveData[4096];
 
 		// 3d listener position
 		float m3dPosition[3];

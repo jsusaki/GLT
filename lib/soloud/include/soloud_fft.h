@@ -31,6 +31,12 @@ namespace SoLoud
 {
 	namespace FFT
 	{
+		// Perform 8192 unit FFT. Buffer must have 2048 floats, and will be overwritten
+		void fft8192(float* aBuffer);
+
+		// Perform 2048 unit FFT. Buffer must have 2048 floats, and will be overwritten
+		void fft2048(float* aBuffer);
+
 		// Perform 1024 unit FFT. Buffer must have 1024 floats, and will be overwritten
 		void fft1024(float *aBuffer);
 

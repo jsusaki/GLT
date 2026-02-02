@@ -61,6 +61,7 @@ bool Application::Start()
             m_accumulator -= m_delta_time;
         }
 
+
         // Rendering pipeline
         PrepareRender();
         // User Rendering

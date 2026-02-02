@@ -2443,6 +2443,16 @@ namespace SoLoud
 {
     namespace FFT
     {
+		void fft8192(float* aBuffer)
+		{
+			fft(aBuffer, 8192);
+		}
+
+		void fft2048(float* aBuffer)
+		{
+			fft(aBuffer, 2048);
+		}
+
         void fft1024(float *aBuffer)
         {
 			fft(aBuffer, 1024);			

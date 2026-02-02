@@ -26,23 +26,19 @@ void ArcballCamera::init(const vf3& eye, const vf3& center, const vf3& up)
     x = glm::normalize(glm::cross(z, y));
 
     center_translation = glm::inverse(glm::translate(center));
-    translation = glm::translate(vf3(0.0f, 0.0f, -glm::length(dir)));
-    rotation = glm::normalize(glm::quat_cast(glm::transpose(mf3x3(x, y, -z))));
-
+    translation        = glm::translate(vf3(0.0f, 0.0f, -glm::length(dir)));
+    rotation           = glm::normalize(glm::quat_cast(glm::transpose(mf3x3(x, y, -z))));
     update_camera();
 }
 
 void ArcballCamera::rotate(vf2 prev_mouse, vf2 cur_mouse)
 {
     // Clamp mouse positions
-    cur_mouse = glm::clamp(cur_mouse, vf2{ -1.0f, -1.0f }, vf2{ 1.0f, 1.0f });
+    cur_mouse  = glm::clamp(cur_mouse,  vf2{ -1.0f, -1.0f }, vf2{ 1.0f, 1.0f });
     prev_mouse = glm::clamp(prev_mouse, vf2{ -1.0f, -1.0f }, vf2{ 1.0f, 1.0f });
-
-    const qf32 mouse_cur_ball = screen_to_arcball(cur_mouse);
+    const qf32 mouse_cur_ball  = screen_to_arcball(cur_mouse);
     const qf32 mouse_prev_ball = screen_to_arcball(prev_mouse);
-
     rotation = mouse_cur_ball * mouse_prev_ball * rotation;
-
     update_camera();
 }
 
@@ -54,22 +50,27 @@ void ArcballCamera::pan(vf2 mouse_delta)
     // Compute the panning in the world space
     motion = inv_camera * motion;
     center_translation = glm::translate(vf3(motion)) * center_translation;
-
     update_camera();
 }
 
 void ArcballCamera::zoom(const f32 zoom_amount)
 {
-    const vf3 motion = { 0.0f, 0.0f, zoom_amount };
-    translation = glm::translate(motion) * translation;
-
+    if (m_orthographic)
+    {
+        m_ortho_size -= zoom_amount * 0.1f;
+        m_ortho_size = glm::max(m_ortho_size, 0.1f);
+    }
+    else
+    {
+        const vf3 motion = { 0.0f, 0.0f, zoom_amount };
+        translation = glm::translate(motion) * translation;
+    }
     update_camera();
 }
 
 void ArcballCamera::translate(vf3 position)
 {
     translation = glm::translate(position);
-
     update_camera();
 }
 
@@ -128,8 +129,24 @@ void ArcballCamera::update_camera()
 
 void ArcballCamera::update_projection(f32 fov, f32 aspect, f32 near, f32 far)
 {
-    proj = glm::perspective(glm::radians(fov), aspect, near, far);
+    if (m_orthographic)
+    {
+        f32 half_height = m_ortho_size;
+        f32 half_width = half_height * aspect;
+        proj = glm::ortho(-half_width, half_width, -half_height, half_height, near, far);
+    }
+    else
+    {
+        proj = glm::perspective(glm::radians(fov), aspect, near, far);
+    }
     inv_proj = glm::inverse(proj);
+}
+
+void Camera::set_orthographic(bool enabled, f32 size)
+{
+    m_orthographic = enabled;
+    m_ortho_size = size;
+    update_camera();
 }
 
 glm::quat screen_to_arcball(const vf2& p)
@@ -150,8 +167,8 @@ glm::quat screen_to_arcball(const vf2& p)
 
 
 
-// Perspective Camera Implementation
-PerspectiveCamera::PerspectiveCamera(const vf3& eye, const vf3& center, const vf3& up, f32 fov, f32 aspect, f32 near, f32 far)
+// Camera Implementation
+Camera::Camera(const vf3& eye, const vf3& center, const vf3& up, f32 fov, f32 aspect, f32 near, f32 far)
 {
     m_field_of_view = fov;
     m_aspect_ratio = aspect;
@@ -161,7 +178,7 @@ PerspectiveCamera::PerspectiveCamera(const vf3& eye, const vf3& center, const vf
     init(eye, center, up);
 }
 
-void PerspectiveCamera::init(const vf3& eye, const vf3& center, const vf3& up)
+void Camera::init(const vf3& eye, const vf3& center, const vf3& up)
 {
     m_position = eye;
     m_forward = glm::normalize(center - eye);
@@ -174,12 +191,12 @@ void PerspectiveCamera::init(const vf3& eye, const vf3& center, const vf3& up)
     update_camera();
 }
 
-void PerspectiveCamera::rotate(vf2 prev_mouse, vf2 curr_mouse)
+void Camera::rotate(vf2 prev_mouse, vf2 curr_mouse)
 {
     vf2 delta = curr_mouse - prev_mouse;
 
-    const f32 sensitivity = 0.2f;
-    m_yaw   += delta.x * sensitivity;
+    const f32 sensitivity = 0.1f;
+    m_yaw   -= delta.x * sensitivity;
     m_pitch += delta.y * sensitivity;
 
     m_pitch = glm::clamp(m_pitch, -89.9f, 89.9f);
@@ -187,7 +204,7 @@ void PerspectiveCamera::rotate(vf2 prev_mouse, vf2 curr_mouse)
     update_camera();
 }
 
-void PerspectiveCamera::pan(vf2 mouse_delta)
+void Camera::pan(vf2 mouse_delta)
 {
     f32 pan_speed = 0.002f   * glm::length(m_position - (m_position + m_forward));
     m_position -= m_right    * mouse_delta.x * pan_speed;
@@ -195,31 +212,48 @@ void PerspectiveCamera::pan(vf2 mouse_delta)
     update_camera();
 }
 
-void PerspectiveCamera::zoom(const f32 zoom_amount)
-{
-    m_position += m_forward * zoom_amount;
-    update_camera();
-}
-
-void PerspectiveCamera::translate(vf3 offset)
+void Camera::translate(vf3 offset)
 {
     m_position += offset;
     update_camera();
 }
 
-const mf4x4& PerspectiveCamera::view()           const { return m_view; }
-const mf4x4& PerspectiveCamera::inv_view()       const { return m_inv_view; }
-const mf4x4& PerspectiveCamera::projection()     const { return m_proj; }
-const mf4x4& PerspectiveCamera::inv_projection() const { return m_inv_proj; }
-const mf4x4  PerspectiveCamera::proj_camera()    const { return m_proj * m_view; }
+void Camera::zoom(const f32 zoom_amount)
+{
+    if (m_orthographic)
+    {
+        m_ortho_size -= zoom_amount * 0.1f;
+        m_ortho_size = glm::max(m_ortho_size, 0.1f);
+    }
+    else
+    {
+        m_position += m_forward * zoom_amount;
+    }
+    update_camera();
+}
 
-vf3 PerspectiveCamera::eye()     const { return m_position; }
-vf3 PerspectiveCamera::front()   const { return m_forward; }
-vf3 PerspectiveCamera::up()      const { return m_up; }
-vf3 PerspectiveCamera::center()  const { return m_position + m_forward; }
-vf3 PerspectiveCamera::right()   const { return m_right; }
+void ArcballCamera::set_orthographic(bool enabled, f32 size)
+{
+    m_orthographic = enabled;
+    m_ortho_size = size;
+    update_camera();
+}
 
-void PerspectiveCamera::update_camera()
+const mf4x4& Camera::view()           const { return m_view; }
+const mf4x4& Camera::inv_view()       const { return m_inv_view; }
+const mf4x4& Camera::projection()     const { return m_proj; }
+const mf4x4& Camera::inv_projection() const { return m_inv_proj; }
+const mf4x4  Camera::proj_camera()    const { return m_proj * m_view; }
+
+vf3 Camera::eye()     const { return m_position; }
+vf3 Camera::front()   const { return m_forward; }
+vf3 Camera::up()      const { return m_up; }
+vf3 Camera::center()  const { return m_position + m_forward; }
+vf3 Camera::right()   const { return m_right; }
+f32 Camera::pitch()   const { return m_pitch; }
+f32 Camera::yaw()     const { return m_yaw; }
+
+void Camera::update_camera()
 {
     // recalc forward/right/up from yaw/pitch
     vf3 f;
@@ -229,16 +263,26 @@ void PerspectiveCamera::update_camera()
     m_forward = glm::normalize(f);
 
     m_right = glm::normalize(glm::cross(m_forward, m_world_up));
-    m_up = glm::normalize(glm::cross(m_right, m_forward));
+    m_up    = glm::normalize(glm::cross(m_right, m_forward));
 
-    m_view = glm::lookAt(m_position, m_position + m_forward, m_up);
+    m_view     = glm::lookAt(m_position, m_position + m_forward, m_up);
     m_inv_view = glm::inverse(m_view);
 
     update_projection(m_field_of_view, m_aspect_ratio, m_near_plane, m_far_plane);
 }
 
-void PerspectiveCamera::update_projection(f32 fov, f32 aspect, f32 near, f32 far)
+void Camera::update_projection(f32 fov, f32 aspect, f32 near, f32 far)
 {
-    m_proj = glm::perspective(glm::radians(fov), aspect, near, far);
+    if (m_orthographic)
+    {
+        f32 half_height = m_ortho_size;
+        f32 half_width  = half_height * aspect;
+        m_proj = glm::ortho(-half_width, half_width, -half_height, half_height, near, far);
+    }
+    else
+    {
+        m_proj = glm::perspective(glm::radians(fov), aspect, near, far);
+    }
     m_inv_proj = glm::inverse(m_proj);
 }
+

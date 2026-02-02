@@ -141,9 +141,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalIncludeDirectories>D:\git\projects\GLT\GLT\lib\stb;D:\git\projects\GLT\GLT\lib\imgui;D:\git\projects\GLT\GLT\lib\imgui\backends;D:\git\projects\GLT\GLT\lib\soloud\include;D:\git\projects\GLT\GLT\lib\soloud\src\backend\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -177,7 +177,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="examples\experiment\prisma.cpp" />
+    <ClCompile Include="examples\audio_reactive\audio_reactive.cpp" />
     <ClCompile Include="include\Graphics\Camera.cpp" />
     <ClCompile Include="include\Graphics\PostProcessor.cpp" />
     <ClCompile Include="include\Graphics\Shader.cpp" />
@@ -250,6 +250,7 @@
     <ClCompile Include="include\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="examples\audio_reactive\dsp.h" />
     <ClInclude Include="include\Application.h" />
     <ClInclude Include="include\Graphics\Camera.h" />
     <ClInclude Include="include\Graphics\Color.h" />
@@ -758,8 +759,10 @@
     <None Include="lib\glm\gtx\wrap.inl" />
     <None Include="lib\soloud\src\audiosource\speech\Elements.def" />
     <None Include="res\shaders\black_hole\black_hole.fs" />
-    <None Include="res\shaders\experiment\prisma.vs" />
-    <None Include="res\shaders\experiment\prisma.fs" />
+    <None Include="res\shaders\audio_reactive\grid.fs" />
+    <None Include="res\shaders\audio_reactive\grid.vs" />
+    <None Include="res\shaders\prisma\prisma.vs" />
+    <None Include="res\shaders\prisma\prisma.fs" />
     <None Include="res\shaders\flow_field\circle.fs" />
     <None Include="res\shaders\flow_field\circle.vs" />
     <None Include="res\shaders\fractal\fractal.fs" />

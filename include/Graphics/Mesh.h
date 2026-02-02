@@ -195,6 +195,53 @@ struct Quad : public Mesh
 	}
 };
 
+struct Grid : public Mesh
+{
+	Grid(int w, int h, float spacing = 1.0f)
+	{
+		vertices.clear();
+		indices.clear();
+
+		float total_width = (w - 1) * spacing;
+		float total_height = (h - 1) * spacing;
+
+		for (int y = 0; y < h; ++y)
+		{
+			for (int x = 0; x < w; ++x)
+			{
+				float u = (float)x / (w - 1);
+				float v = (float)y / (h - 1);
+
+				float px = (x * spacing) - (total_width  * 0.5f);
+				float py = (y * spacing) - (total_height * 0.5f);
+
+				vertices.push_back({
+					{ px, py, 0.0f },
+					{ 0.0f, 1.0f, 0.0f },
+					{ 1.0f, 1.0f, 1.0f, 1.0f},
+					{ u, v }
+				});
+			}
+		}
+
+		for (int y = 0; y < h - 1; ++y)
+		{
+			for (int x = 0; x < w - 1; ++x)
+			{
+				int i = y * w + x;
+				indices.push_back(i);
+				indices.push_back(i + 1);
+				indices.push_back(i + w);
+				indices.push_back(i + 1);
+				indices.push_back(i + w + 1);
+				indices.push_back(i + w);
+			}
+		}
+		setup_buffers();
+	}
+};
+
+
 struct Cube : public Mesh
 {
 	Cube()

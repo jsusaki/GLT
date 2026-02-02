@@ -75,7 +75,7 @@
     <ClCompile Include="include\Graphics\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="examples\experiment\prisma.cpp">
+    <ClCompile Include="examples\audio_reactive\audio_reactive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="lib\soloud\src\audiosource\monotone\soloud_monotone.cpp">
@@ -1325,6 +1325,9 @@
     <ClInclude Include="lib\soloud\src\backend\miniaudio\miniaudio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="examples\audio_reactive\dsp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic\default.vs" />
@@ -1762,11 +1765,13 @@
     <None Include="res\shaders\fractal\fractal.vs" />
     <None Include="res\shaders\fractal\fractal.fs" />
     <None Include="res\shaders\black_hole\black_hole.fs" />
-    <None Include="res\shaders\experiment\prisma.fs" />
-    <None Include="res\shaders\experiment\prisma.vs" />
+    <None Include="res\shaders\prisma\prisma.fs" />
+    <None Include="res\shaders\prisma\prisma.vs" />
     <None Include="lib\soloud\src\audiosource\speech\Elements.def">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="res\shaders\audio_reactive\grid.fs" />
+    <None Include="res\shaders\audio_reactive\grid.vs" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\glfw\lib\glfw3.lib" />
